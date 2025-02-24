@@ -1,0 +1,347 @@
+/* @font-face {
+  font-family: balloonFont;
+  src: local('balloonFont'),URL('../assets/fonts/balloonFont.woff2') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: roamingFont;
+  src: local('roamingFont'),URL('../assets/fonts/roamingFont.woff2') format('truetype');
+}
+.font-stand-in{
+  font-family: "balloonFont.ttf";
+font-size: 16px;
+line-height: 1.6;
+} */
+.nice-text-lg{
+  font-family: 'Proxima Nova',acumin-pro,sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  line-height: 1.4em;
+  font-size: calc((2.2 - 1) * 1.2vw + 1rem);
+}
+.nice-text-med{
+  font-family: 'Proxima Nova',acumin-pro,sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  line-height: 1.4em;
+  font-size: calc((1.8 - 1) * 1.1vw + 1rem);
+}
+.nice-text-sm{
+  font-family: 'Proxima Nova',acumin-pro,sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  line-height: 1.4em;
+  font-size: calc((1.4 - 1) * 0.9vw + 1rem);
+}
+.link-style {
+ text-decoration: underline;
+ color: #4c8aed;
+ cursor: pointer;
+}
+
+.heavy-black-text{
+font-weight: 800;
+color:#111112;
+}
+
+.error-message{
+font-family: 'Proxima Nova',acumin-pro,sans-serif;
+font-weight: 500;
+font-style: normal;
+letter-spacing: 0.08em;
+text-transform: none;
+line-height: 1.4em;
+font-size: calc((1.4 - 1) * 0.9vw + 1rem);
+color:red;
+}
+
+.vertical-centered-text{
+text-align: center;
+}
+/* .balloon-text{
+font-family: balloonFont,roamingFont,Avenir;
+font-size: calc((1.8 - 1) * 1.2vw + 1.1rem);
+} */
+
+
+.roaming-text{
+font-family: roamingFont,'Proxima Nova';
+}
+.roaming-text-md{
+font-family: roamingFont,'Proxima Nova';
+font-size: calc((1.8 - 1) * 1.2vw + 1.1rem);
+
+}
+.roaming-text-sm-itemized{
+font-family: roamingFont,'Proxima Nova';
+color:#6b6b6a;
+font-size: calc((1.5 - 1) * 0.9vw + 0.9rem);
+}
+.roaming-text-sm{
+font-family: roamingFont,'Proxima Nova';
+font-size: calc((1.8 - 1) * 0.9vw + 0.9rem);
+}
+.roaming-text-xtra-sm{
+font-family: roamingFont,'Proxima Nova';
+font-size: calc((1.8 - 1) * 0.5vw + 0.6rem);
+
+}
+.roaming-black-text{
+color: #595456!important;
+}
+.roaming-brown-text{
+color: #B97F51!important;
+
+}
+.roaming-yellow-text{
+color: #E2B54B!important;
+
+}
+
+.roaming-white-text{
+color: #E7E2CD!important;
+
+}
+
+.roaming-blue-text{
+color: #BED3C7!important;
+
+}
+
+.roaming-green-text{
+color: #91A98F!important;
+
+}
+.roaming-red-text{
+color: #c93b30!important;
+
+}
+
+
+.large-header-text{
+font-weight: 500;
+font-style: normal;
+/* letter-spacing: 0.08em; */
+text-transform: none;
+line-height: 1.4em;
+font-size: calc((4.1 - 1) * 0.9vw + 1rem);
+}
+.small-link-text{
+font-weight: 500;
+font-style: normal;
+/* letter-spacing: 0.08em; */
+text-transform: none;
+line-height: 1.4em;
+font-size: calc((1.8 - 1) * 0.9vw + 0.6rem);
+cursor: pointer;
+}
+.medium-link-text{
+font-weight: 500;
+font-style: normal;
+/* letter-spacing: 0.08em; */
+text-transform: none;
+line-height: 1.4em;
+font-size: calc((1.8 - 1) * 0.9vw + 1rem);
+cursor: pointer;
+}
+
+
+.medium-link-text:hover{
+font-weight: 500;
+font-style: normal;
+/* letter-spacing: 0.08em; */
+text-transform: none;
+line-height: 1.4em;
+font-size: calc((1.8 - 1) * 0.9vw + 1rem);
+color: #595456!important;
+}
+.medium-text{
+font-weight: 500;
+font-style: normal;
+/* letter-spacing: 0.08em; */
+text-transform: none;
+line-height: 1.4em;
+font-size: calc((1.8 - 1) * 0.9vw + 1rem);
+}
+
+.blog-title{
+font-family: 'Proxima Nova',roamingFont;
+font-weight: 500;
+font-style: normal;
+/* letter-spacing: 0.08em; */
+text-transform: none;
+
+color: #E2B54B;
+font-size: calc((4.4 - 1) * 0.9vw + 1rem);
+}
+.blog-h1{
+font-family: 'Proxima Nova',roamingFont;
+font-weight: 500;
+text-transform: none;
+line-height: 1.4em;
+color: #B97F51;
+font-size: calc((3.4 - 1) * 0.9vw + 0.7rem);
+}
+
+.blog-h2 {
+  font-family: 'Proxima Nova',roamingFont, sans-serif; /* Assuming roamingFont is defined */
+  font-weight: 600; /* Slightly bolder to make it pop more */
+  font-style: normal;
+  padding-left: 10vw; /* Adjusted for better alignment */
+  padding-top:2vh;
+  text-transform: none;
+  color: #91A98F; /* Soft muted green */
+  margin: 0;
+  font-size: calc(1.2rem + 2.5vw); /* More dynamic and responsive font sizing */
+  line-height: 1.2; /* Improved line height for readability */
+  letter-spacing: 0.05em; /* Added subtle letter-spacing for a clean, airy feel */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow for a touch of depth */
+}
+
+/* For responsive adjustments */
+@media (max-width: 768px) {
+  .blog-h2 {
+    font-size: calc(2rem + 4vw); /* Adjusted for smaller screens */
+    padding-left: 5vw; /* Reduced padding for tighter alignment on mobile */
+  }
+}
+
+
+/* Extra Small Devices (phones, less than 576px) */
+@media (max-width: 575.98px) {
+.blog-body {
+  padding-left: 5vw;  /* Reduced padding for small screens */
+  padding-right: 5vw; /* Reduced padding for small screens */
+}
+.blog-h2 {
+  padding-left: 5vw;  /* Reduced padding for small screens */
+  padding-right: 5vw; /* Reduced padding for small screens */
+}
+
+}
+
+/* Small Devices (tablets, 576px and up) */
+@media (min-width: 576px) {
+.blog-body {
+  padding-left: 8vw;
+  padding-right: 8vw;
+
+}
+.blog-h2 {
+  padding-left: 12.5vw;  /* Reduced padding for small screens */
+  padding-right: 12.5vw; /* Reduced padding for small screens */
+}
+}
+
+/* Medium Devices (desktops, 768px and up) */
+@media (min-width: 768px) {
+.blog-body {
+  padding-left: 10vw;
+  padding-right: 10vw;
+
+}
+.blog-h2 {
+  padding-left: 15vw;  /* Reduced padding for small screens */
+  padding-right: 15vw; /* Reduced padding for small screens */
+}
+}
+
+/* Large Devices (large desktops, 992px and up) */
+@media (min-width: 992px) {
+.blog-body {
+  padding-left: 15vw;
+  padding-right: 15vw;
+}
+.blog-h2 {
+  padding-left: 20vw;  
+  padding-right: 20vw;
+}
+}
+
+/* Extra Large Devices (larger desktops, 1200px and up) */
+@media (min-width: 1200px) {
+.blog-body {
+  padding-left: 15vw;
+  padding-right: 15vw;
+}
+.blog-h2 {
+  padding-left: 25vw;  
+  padding-right: 25vw; 
+}
+}
+
+/* Extra Extra Large Devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) {
+.blog-body {
+  padding-left: 15vw;
+  padding-right: 15vw;
+}
+.blog-h2 {
+  padding-left: 5vw;  /* Reduced padding for small screens */
+  padding-right: 5vw; /* Reduced padding for small screens */
+}
+}
+
+.web-text{
+font-family: roamingFont;
+line-height: 1.5em;
+font-size: calc((1.9 - 1) * 0.9vw + 0.7rem);
+
+
+}
+.web-header{
+font-family: roamingFont;
+font-weight: 500;
+text-transform: none;
+line-height: 1.4em;
+font-size: calc((3.4 - 1) * 0.9vw + 0.7rem);
+}
+
+.centered-text{
+align-self: center;
+justify-content: center;
+ word-wrap: normal;
+}
+.center-justified-text{
+align-self: center;
+align-content: center;
+align:center;
+justify-content: center;
+justify:center;
+word-wrap: normal;
+ text-align: center;
+ text-overflow: inherit;
+}
+.auto-margins{
+margin: auto;
+}
+
+.blog-body {
+  font-family: 'Proxima Nova',roamingFont, sans-serif; /* Assuming roamingFont is defined */
+  font-style: normal;
+  text-transform: none;
+  color: #91A98F; /* Soft muted green */
+  margin: 0;
+  font-size: clamp(1rem, calc(0.4rem + 1vw), 1.5rem);  /* More dynamic and responsive font sizing */
+  line-height: 1.6; /* Improved line height for readability */
+  letter-spacing: 0.1em; /* Added subtle letter-spacing for a clean, airy feel */
+   /*text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow for a touch of depth */
+}
+
+.img-caption {
+  font-family: 'Proxima Nova',roamingFont;
+  line-height: 1.5em;
+  font-size: calc((1.5 - 1) * 0.9vw + 0.7rem);
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+  color: white; /* Text color */
+  padding: 0.5em 1em; /* Padding to create space around the text */
+  border-radius: 25px; /* Rounded corners */
+  display: inline-block; /* Ensures the background only covers the text */
+}
+

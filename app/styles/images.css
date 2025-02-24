@@ -1,0 +1,147 @@
+.profile-pic{
+  border-radius: 50%;
+  width: 8em;
+}
+.pic-preview{
+  max-width:8em;
+  max-height:8em;
+}
+.post-pic{
+  max-width:14em;
+  max-height:14em;
+}
+.profile-pic-sm{
+  border-radius: 50%;
+  width: 4em;
+}
+.home-logo{
+  width: 8em;
+  top:50%;
+  position: relative;
+  cursor: pointer;
+}
+.banner-pic{
+  min-width: 100%;
+}
+.blog-tease{
+  width:80%;
+  cursor: pointer;
+}
+
+.blog-main-img{
+  max-height:85vh;
+  border-radius:5px;
+}
+
+.blog-dyptich{
+  max-height: 85vh;
+  max-width:45vw;
+  border-radius:5px;
+}
+
+.calculator-icon{
+  max-width:55%;
+  border-radius:5px;
+}
+
+.mobile-calculator-icon{
+  max-width: 7.5em;
+  max-height:5em;
+  border-radius:5px;
+}
+
+
+.gallery-col{
+  position: relative;
+}
+
+.gallery-col:hover{
+    filter: brightness(80%);
+}
+
+.gallery-label{
+  display: none;
+}
+.gallery-col:hover .gallery-label{
+  position: absolute;
+  display: block;
+  font-family: roamingFont;
+  font-size: 2em;
+  color: #ebeae6;
+  z-index: 16;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+}
+
+
+.blog-header-wrapper{
+
+  display: flex;
+      justify-content: center;
+      align-items: center;
+}
+.blog-label{
+  position: absolute;
+  display: block;
+  font-family: roamingFont;
+  font-size: calc((6 - 1) * 1.2vw + 1em);
+  color: #ebeae6;
+  z-index: 16;
+
+
+
+}
+.blog-sub-label{
+  position: absolute;
+  display: block;
+  font-family: roamingFont;
+  font-size: calc((2 - 1) * 1.2vw + 1em);
+  margin-top:calc((8 - 1) * 1.2vw + 1em);
+  color: #ebeae6;
+  z-index: 16;
+
+
+
+}
+
+.image-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.image-item {
+  text-align: center;
+  flex: 1;
+}
+
+.image-item p {
+  margin-top: 8px;
+  font-size: 16px;
+  color: #333;
+}
+
+.image-item a {
+  text-decoration: none;
+  color: inherit;
+}
+.image-item-padding-sm {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+.image-item-padding-md {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+.image-item-padding-lg {
+  padding-left: 3em;
+  padding-right: 3em;
+}
+@media (max-width: 768px) {
+  .image-container {
+    flex-direction: column;
+    gap: 24px; /* Adjust gap for vertical stacking */
+  }
+}

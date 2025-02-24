@@ -1,0 +1,72 @@
+.zoom:hover {
+  transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+  transition: opacity 1200ms ease-in;
+  -webkit-transition: opacity 1200ms ease-in;
+  -moz-transition: opacity 1200ms ease-in;
+  -o-transition: opacity 1200ms ease-in;
+  box-shadow:0 4px 7px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+
+}
+
+.blog-zoom:hover {
+  transform: scale(1.005); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+  transition: opacity 1200ms ease-in;
+  -webkit-transition: opacity 1200ms ease-in;
+  -moz-transition: opacity 1200ms ease-in;
+  -o-transition: opacity 1200ms ease-in;
+  box-shadow:0 4px 7px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+
+}
+
+.image-highlight:hover{
+  transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+  transition: opacity 1200ms ease-in;
+  -webkit-transition: opacity 1200ms ease-in;
+  -moz-transition: opacity 1200ms ease-in;
+  -o-transition: opacity 1200ms ease-in;
+}
+.fadded{
+  opacity: 0.7;
+}
+
+
+
+.edit-container {
+  position: relative;
+}
+
+.loading-indicator {
+  color: blue; /* Change color as needed */
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.draggable-container {
+  position: relative;
+}
+
+.draggable-item {
+  transition: all 0.2s ease;
+  margin: 5px 0;
+  padding: 10px;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: move;
+}
+
+.draggable-item.dragging {
+  opacity: 0.8;
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.drop-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px; /* Change height as needed */
+  background-color: #ff0000; /* Change color as needed */
+  border: dashed 2px #000; /* Dashed style */
+  z-index: 1; /* Ensure it appears above other elements */
+}

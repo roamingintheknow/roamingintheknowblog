@@ -1,0 +1,160 @@
+.full-height{
+  height:100vh;
+  max-height:100vh;
+  min-height:100vh;
+}
+.fill-height{
+  height:100%;
+  max-height:100%;
+  min-height:100%;
+}
+.full-width{
+  width:100vw;
+  max-width: 100vw;
+  min-width: 100vw;
+  overflow-x: hidden;
+
+}
+.fill-width{
+  width:100%;
+  max-width: 100%;
+  min-width: 100%;
+  overflow-x: hidden;
+}
+.small-margin-left{
+  padding-left: 5vw;
+}
+.small-margin-right{
+  padding-right: 5vw;
+}
+.horizontal-centered-children{
+  display: flex;
+      justify-content: center;
+
+}
+.vertical-centered-children{
+  display: flex;
+   align-items: center;
+}
+.centered-children{
+  display: flex;
+      justify-content: center;
+      align-items: center;
+}
+.centered-text{
+  justify-content: center;
+  align-self: center!important;
+  display: flex;
+
+}
+.centered-children-text{
+  display: flex;
+      justify-content: center;
+      align-items: center;
+}
+
+.left-children{
+  display: flex;
+      justify-content: left;
+      align-items: left;
+}
+.right-children{
+  display: flex;
+      justify-content: right;
+      align-items: right;
+}
+
+.vertical-margin-sm{
+  margin-top:1em;
+  margin-bottom:1em;
+}
+
+.vertical-margin-md{
+  margin-top:2em;
+  margin-bottom:2em;
+}
+
+.vertical-margin-lg{
+  margin-top:3em;
+  margin-bottom:3em;
+}
+.bottom-margin-sm{
+  margin-bottom:1em;
+}
+
+.bottom-margin-md{
+  margin-bottom:2em;
+}
+
+.bottom-margin-lg{
+  margin-bottom:3em;
+}
+.no-margins{
+  margin: 0vh!important;
+}
+.vertical-padding-sm{
+  padding-top:1em;
+  padding-bottom:1em;
+}
+
+.vertical-padding-md{
+  padding-top:2em;
+  padding-bottom:2em;
+}
+
+.vertical-padding-lg{
+  padding-top:3em;
+  padding-bottom:3em;
+}
+
+.bottom-padding-sm{
+  padding-bottom:1em;
+}
+
+.bottom-padding-md{
+  padding-bottom:2em;
+}
+
+.bottom-padding-lg{
+  padding-bottom:3em;
+}
+
+.top-padding-sm{
+  padding-top:1em;
+}
+
+.top-padding-md{
+  padding-top:2em;
+}
+
+.top-padding-lg{
+  padding-top:3em;
+}
+.input-padding-sm{
+  padding-left:1em;
+  padding-right:1em;
+
+}
+.input-padding-md{
+  padding-left:2em;
+  padding-right:2em;
+  padding-top:1em;
+  padding-bottom: 1em;
+}
+.input-padding-lg{
+  padding-left:3em;
+  padding-right:3em;
+  padding-top:1.5em;
+  padding-bottom: 1.5em;
+}
+
+.blog-row{
+  margin-left: 15vw;
+  margin-right: 15vw;
+}
+
+.blog-container{
+  padding-top:10vh;
+
+  padding-bottom:10vh;
+}
