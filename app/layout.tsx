@@ -1,16 +1,35 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+// import { Inter, Merriweather } from "next/font/google";
+import { Quicksand, Playfair_Display } from "next/font/google";
 import "./styles/globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Load Google Fonts with optimal settings
+const quicksand = Quicksand({
+  variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "600", "700"], // Load only necessary weights
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const playfair = Playfair_Display({
+  variable: "--font-serif",
   subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "700"], // Load only necessary weights
 });
+// const inter = Inter({
+//   variable: "--font-sans",
+//   subsets: ["latin"],
+//   display: "swap",
+//   weight: ["400", "600", "700"], // Load only necessary weights
+// });
+
+// const merriweather = Merriweather({
+//   variable: "--font-serif",
+//   subsets: ["latin"],
+//   display: "swap",
+//   weight: ["400", "700"], // Load only necessary weights
+// });
 
 export const metadata: Metadata = {
   title: "Roaming In The Know - Your Ultimate Travel Guide",
@@ -62,45 +81,9 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
-
-        {/* Structured Data for SEO & Social Media */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Blog",
-              "name": "Roaming In The Know",
-              "url": "https://www.roamingintheknow.com",
-              "description":
-                "Discover the best travel destinations, tips, and itineraries with Roaming In The Know.",
-              "sameAs": [
-                "https://www.instagram.com/roamingintheknow",
-                "https://www.youtube.com/c/RoamingInTheKnow",
-                "https://www.facebook.com/RoamingInTheKnow",
-                "https://twitter.com/roamingintheknow",
-              ],
-              "publisher": {
-                "@type": "Organization",
-                "name": "Roaming In The Know",
-                "logo": {
-                  "@type": "ImageObject",
-                  "url": "https://www.roamingintheknow.com/logo.png",
-                  "width": 500,
-                  "height": 500,
-                },
-              },
-              "mainEntityOfPage": {
-                "@type": "WebPage",
-                "@id": "https://www.roamingintheknow.com",
-              },
-            }),
-          }}
-        />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${quicksand.variable} ${playfair.variable} antialiased`}>
+      {/* <body className={`${inter.variable} ${merriweather.variable} antialiased`}> */}
         {children}
       </body>
     </html>
