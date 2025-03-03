@@ -10,6 +10,7 @@ export default async (req, res) => {
         "This is protected content. You can access this content because you are signed in.",
     })
   } else {
+    console.log('restricted page!')
     res.send({
       error: "You must be signed in to view the protected content on this page.",
     })

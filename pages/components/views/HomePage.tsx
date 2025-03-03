@@ -90,8 +90,8 @@ export default function Home() {
     <Image
       src={images[currentImageIndex]}
       alt={`Slide ${currentImageIndex}`}
-      layout="fill"
-      objectFit="cover"
+      fill 
+      style={{ objectFit: 'cover' }}
       className="object-cover"
     />
     <div className="absolute inset-0 bg-black opacity-20"></div> {/* Add a subtle overlay */}
@@ -254,8 +254,8 @@ const BlogTileV = ({ blog }) => {
   <Image
     src={blog.coverV}
     alt={`Blog Cover Img ${blog.title}`}
-    layout="fill"
-    objectFit="cover"
+    fill 
+    style={{ objectFit: 'cover' }}
     className="rounded-lg"
   />
 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity duration-300 rounded-lg" />
@@ -285,8 +285,8 @@ const BlogTileH = ({ blog }) => {
   <Image
     src={blog.coverH}
     alt={`Blog Cover Img ${blog.title}`}
-    layout="fill"
-    objectFit="cover"
+    fill 
+    style={{ objectFit: 'cover' }}
     className="rounded-lg"
   />
   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity duration-300 rounded-lg" />

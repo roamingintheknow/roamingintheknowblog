@@ -72,8 +72,8 @@ export  function AboutContent(){
       <Image
         src={about_images[currentAboutImageIndex]}
         alt={`About Slide ${currentAboutImageIndex}`}
-        layout="fill"
-        objectFit="cover"
+        fill 
+        style={{ objectFit: 'cover' }}
         className="rounded-lg"
       />
     </div>

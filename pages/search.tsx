@@ -168,8 +168,8 @@ export default function Search() {
           <Image
             src={blog.coverH}
             alt={`Blog Cover Img ${blog.title}`}
-            layout="fill"
-            objectFit="cover"
+            fill 
+            style={{ objectFit: 'cover' }}
             className="rounded-lg"
           />
         <div className="absolute inset-0 flex items-center justify-center px-4 ">

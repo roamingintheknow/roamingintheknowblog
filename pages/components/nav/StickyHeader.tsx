@@ -6,6 +6,19 @@ import PropTypes from 'prop-types';
 import Image from 'next/image'
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+interface SubmenuItem {
+  label: string;
+  href?: string;
+}
+
+interface MenuItem {
+  label: string;
+  submenu?: SubmenuItem[];
+}
+
+interface NestedDropdownProps {
+  menuItems: MenuItem[];
+}
 
 interface StickyHeaderProps {
   page: string;
@@ -16,13 +29,13 @@ export default function StickyHeader({ page }: StickyHeaderProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
 
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      window.open(`/search?query=${encodeURIComponent(searchTerm)}`, '_blank');
-      setSearchTerm('');
-    }
-  };
+  // const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   if (searchTerm.trim()) {
+  //     window.open(`/search?query=${encodeURIComponent(searchTerm)}`, '_blank');
+  //     setSearchTerm('');
+  //   }
+  // };
   const [menuItems, setMenuItems] = useState([]);
   const [isAdmin, setIsAdmin] =  useState(false);
   const [menuOpen, setMenuOpen]= useState(false);
@@ -31,7 +44,8 @@ export default function StickyHeader({ page }: StickyHeaderProps) {
       // Fetch the menu data from your API
       const response = await fetch('/api/getMenuData');
       const data = await response.json();
-      setMenuItems(data);
+      console.log('menu items from db...',data)
+      setMenuItems(data.menuItems);
     }
 
     fetchMenuData();
@@ -262,16 +276,3 @@ NestedDropdown.propTypes = {
     })
   ).isRequired
 };
-interface SubmenuItem {
-  label: string;
-  href?: string;
-}
-
-interface MenuItem {
-  label: string;
-  submenu?: SubmenuItem[];
-}
-
-interface NestedDropdownProps {
-  menuItems: MenuItem[];
-}

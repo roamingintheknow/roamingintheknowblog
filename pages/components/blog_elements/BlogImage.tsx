@@ -1,15 +1,27 @@
 import Image from 'next/image';
 
-export function BlogImage({ element }) {
+interface ImageUrl {
+  imageUrl: string;
+  lowResUrl?: string;
+}
+
+interface BlogImageProps {
+  element: {
+    subType?: string;
+    imageUrls?: ImageUrl[];
+  };
+}
+
+export function BlogImage({ element }: BlogImageProps) {
   const subType = element?.subType || '';
-  const urls = element?.imageUrls || [];
+  const urls = element?.imageUrls ?? [];
 
   // Define a uniform width and spacing
   const uniformWidth = 900;
   const gapSize = 8; // Gap size in pixels
 
   // Define height ratios for each subtype
-  const heightRatios = {
+  const heightRatios: Record<string, number> = {
     lh: 2 / 3, // Landscape horizontal
     lv: 3 / 2, // Landscape vertical
     vd: 2 / 3, // Vertical diptych
@@ -19,17 +31,20 @@ export function BlogImage({ element }) {
   };
 
   // Get height dynamically based on subtype
-  const getHeight = (subType) => Math.round(uniformWidth * (heightRatios[subType] || 1));
+  const getHeight = (subType: string): number => 
+    Math.round(uniformWidth * (heightRatios[subType] || 1));
 
   // Adjust width dynamically for diptychs and triptychs, subtracting space for gaps
-  const getWidth = (subType) => {
+  const getWidth = (subType: string): number => {
     if (['vd', 'vt', 'hd', 'hs'].includes(subType)) {
       const totalGap = gapSize * (urls.length - 1); // Total space taken by gaps
       return Math.floor((uniformWidth - totalGap) / urls.length); // Width per image
     }
     return uniformWidth; // Full width for single layouts
   };
-console.log('urls...',urls)
+
+  console.log('urls...', urls);
+
   return (
     <div className="w-full">
       {['lh', 'lv', 'vd', 'vt', 'hd', 'hs'].includes(subType) && (
