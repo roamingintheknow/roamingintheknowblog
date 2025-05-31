@@ -4,20 +4,14 @@ import { BlogSubHeader } from './BlogSubHeader';
 import { BlogBody } from './BlogBody';
 import { BlogImage } from './BlogImage';
 import { BlogList } from './BlogList';
-
-interface BlogElement {
-  type: 'title' | 'header' | 'sub_header' | 'body' | 'image' | 'list';
-  content: string;
-  subType?: string;
-  imageUrls?: { imageUrl: string; lowResUrl?: string }[];
-}
+import { BlogElement } from '@/types/blog';
 
 interface BlogPostProps {
   elements: BlogElement[];
   hideTitle?: boolean;
-  coverH?: string;
-  coverV?: string;
-  coverS?: string;
+  coverH: string;
+  coverV: string;
+  coverS: string;
 }
 
 export default function BlogPost({ elements,coverH,coverV,coverS, hideTitle = false }: BlogPostProps) {

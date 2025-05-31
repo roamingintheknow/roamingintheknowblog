@@ -1,5 +1,5 @@
 interface BlogSubHeaderProps {
-  text: string;
+  text: string | string[];
 }
 
 export function BlogSubHeader({text}: BlogSubHeaderProps) {

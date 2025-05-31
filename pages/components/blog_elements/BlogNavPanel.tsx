@@ -1,8 +1,9 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { BlogElement } from '@/types/blog';
 
 interface HeaderNavProps {
-  elements: { type: string; content: string }[];
+  elements: BlogElement[];
 }
 
 export const BlogNavPanel = ({ elements }: HeaderNavProps) => {

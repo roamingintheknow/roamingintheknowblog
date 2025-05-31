@@ -1,5 +1,5 @@
 interface BlogHeaderProps {
-  text: string;
+  text: string | string[];
 }
 
 export function BlogHeader({text}: BlogHeaderProps) {

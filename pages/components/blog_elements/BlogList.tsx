@@ -18,12 +18,11 @@ interface ContentItem {
 
 
 interface  Element {
-  content: string;
+  content: string ;
   imageUrls: string[];
 };
 
 export function BlogList({ element }: { element: Element }) {
-  console.log('element...',element)
   const parsedContent: ContentItem[] = (() => {
     try {
       return JSON.parse(element.content);

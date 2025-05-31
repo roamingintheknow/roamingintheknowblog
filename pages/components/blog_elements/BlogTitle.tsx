@@ -5,7 +5,7 @@ interface BlogTitleProps {
   coverH: string;
   coverV: string;
   coverS: string;
-  text: string;
+  text: string | string[];
 }
 
 export function BlogTitle({ text, coverH,coverV,coverS }: BlogTitleProps) {

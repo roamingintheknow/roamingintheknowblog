@@ -1,7 +1,21 @@
 import BlogPost from '../blog_elements/BlogPost';
 import {BlogNavPanel} from '../blog_elements/BlogNavPanel';
+import { BlogElement } from '@/types/blog';
 
-export default function Preview({ blog, setPreview }) {
+interface Blog {
+  _id: string;
+  coverH: string;
+  coverV: string;
+  coverS: string;
+  elements: BlogElement[];
+}
+
+interface PreviewProps {
+  blog: Blog;
+  setPreview: (preview: boolean) => void;
+}
+
+export default function Preview({ blog, setPreview }: PreviewProps) {
 
   return (
     <>

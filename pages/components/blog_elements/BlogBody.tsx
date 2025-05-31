@@ -1,5 +1,5 @@
 interface BlogBodyProps {
-  text: string;
+  text: string | string[];
 }
 
 export function BlogBody({ text }: BlogBodyProps) {
