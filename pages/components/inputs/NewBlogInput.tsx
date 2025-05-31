@@ -1,6 +1,16 @@
 import NewImageElement from './NewImageElement'
+import ListBuilder from './ListBuilder'
+import QuillTextEditor from './quill'
 
-export function NewBlogInput({element,index, onChange, onImageUpload}) {
+interface NewBlogInputProps {
+  element: { content: string, type: string }; 
+  index: number;
+  handleListAdd: (value: [string]) => void;
+  onChange: (index: number, value: string) => void;
+  onImageUpload: (index: number,imageUrl: string, lowResUrl:string, file: File) => void; 
+}
+
+export function NewBlogInput({ element, index, onChange, onImageUpload, handleListAdd }: NewBlogInputProps) {
 
   return (
     <>
@@ -12,7 +22,7 @@ export function NewBlogInput({element,index, onChange, onImageUpload}) {
   <input
     type="text"
     value={element.content}
-    onChange={(event) => onChange(index, event)}
+    onChange={(event) => onChange(index, event.target.value)}
     className="w-full px-3 py-2 border rounded"
     style={{ color: 'black' }}
   />
@@ -26,7 +36,7 @@ export function NewBlogInput({element,index, onChange, onImageUpload}) {
             <input
               type="text"
               value={element.content}
-              onChange={(event) => onChange(index, event)}
+              onChange={(event) => onChange(index, event.target.value)}
               className="w-full px-3 py-2 border rounded"
               style ={{color:'black'}}
             />
@@ -34,17 +44,38 @@ export function NewBlogInput({element,index, onChange, onImageUpload}) {
 
     </>
   }
+      {element.type =='sub_header'&&
+    <>
+<div className="flex flex-col w-full">
+<label className="block text-gray-700 mb-2">Sub-Header</label>
+            <input
+              type="text"
+              value={element.content}
+              onChange={(event) => onChange(index, event.target.value)}
+              className="w-full px-3 py-2 border rounded"
+              style ={{color:'black'}}
+            />
+</div>
+
+    </>
+  }
+        {element.type =='list'&&
+    <>
+  <ListBuilder index={index} onChange={(index, value) => onChange(index, value)} existingList={element?.content||[]}/>
+    </>
+}
   {element.type =='body'&&
     <>
 <div className="flex flex-col w-full">
 <label className="block text-gray-700 mb-2">Body</label>
-<textarea
+<QuillTextEditor element ={element} onChange={onChange} index={index}/>
+{/* <textarea
   value={element.content}
   onChange={(event) => onChange(index, event)}
   className="w-full h-40 px-3 py-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
   placeholder="Enter your text here..."
   style ={{color:'black'}}
-></textarea>
+></textarea> */}
 </div>
     </>
   }

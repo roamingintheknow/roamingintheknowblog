@@ -1,7 +1,6 @@
 import Image from 'next/image'
 
 const ImagePreview = ({imageUrl,classes, width, height})=>{
-  console.log('ImageURL...',imageUrl)
   return(
    <>
     {imageUrl && (

@@ -193,7 +193,6 @@ font-size: calc((3.4 - 1) * 0.9vw + 0.7rem);
   font-family: 'Proxima Nova',roamingFont, sans-serif; /* Assuming roamingFont is defined */
   font-weight: 600; /* Slightly bolder to make it pop more */
   font-style: normal;
-  padding-left: 10vw; /* Adjusted for better alignment */
   padding-top:2vh;
   text-transform: none;
   color: #91A98F; /* Soft muted green */
@@ -203,89 +202,106 @@ font-size: calc((3.4 - 1) * 0.9vw + 0.7rem);
   letter-spacing: 0.05em; /* Added subtle letter-spacing for a clean, airy feel */
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow for a touch of depth */
 }
-
-/* For responsive adjustments */
-@media (max-width: 768px) {
-  .blog-h2 {
-    font-size: calc(2rem + 4vw); /* Adjusted for smaller screens */
-    padding-left: 5vw; /* Reduced padding for tighter alignment on mobile */
-  }
+.blog-h-sub {
+  font-family: 'Proxima Nova',roamingFont, sans-serif; /* Assuming roamingFont is defined */
+  font-weight: 400; /* Slightly bolder to make it pop more */
+  font-style: normal;
+  padding-top:2vh;
+  text-transform: none;
+  color: #91A98F!important; /* Soft muted green */
+  margin: 0;
+  font-size: calc(0.8rem + 1.7vw); /* More dynamic and responsive font sizing */
+  line-height: 1.2; /* Improved line height for readability */
+  letter-spacing: 0.05em; /* Added subtle letter-spacing for a clean, airy feel */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow for a touch of depth */
 }
+
 
 
 /* Extra Small Devices (phones, less than 576px) */
 @media (max-width: 575.98px) {
-.blog-body {
+.blog-element {
   padding-left: 5vw;  /* Reduced padding for small screens */
   padding-right: 5vw; /* Reduced padding for small screens */
 }
-.blog-h2 {
-  padding-left: 5vw;  /* Reduced padding for small screens */
-  padding-right: 5vw; /* Reduced padding for small screens */
+.blog-sub-list{
+  padding-left:2vw;
 }
+.blog-sub-sub-list{
+  padding-left: 1vw;
+}
+
 
 }
 
 /* Small Devices (tablets, 576px and up) */
 @media (min-width: 576px) {
-.blog-body {
-  padding-left: 8vw;
-  padding-right: 8vw;
-
-}
-.blog-h2 {
-  padding-left: 12.5vw;  /* Reduced padding for small screens */
-  padding-right: 12.5vw; /* Reduced padding for small screens */
-}
+  .blog-element {
+    padding-left: 8vw;  
+    padding-right: 8vw; 
+  }
+  .blog-sub-list{
+    padding-left:2vw;
+  }
+  .blog-sub-sub-list{
+    padding-left: 1vw;
+  }
 }
 
 /* Medium Devices (desktops, 768px and up) */
 @media (min-width: 768px) {
-.blog-body {
-  padding-left: 10vw;
-  padding-right: 10vw;
-
-}
-.blog-h2 {
-  padding-left: 15vw;  /* Reduced padding for small screens */
-  padding-right: 15vw; /* Reduced padding for small screens */
-}
+  .blog-element {
+    padding-left: 10vw;  
+    padding-right: 10vw; 
+  }
+  .blog-sub-list{
+    padding-left:2vw;
+  }
+  .blog-sub-sub-list{
+    padding-left: 1vw;
+  }
 }
 
 /* Large Devices (large desktops, 992px and up) */
 @media (min-width: 992px) {
-.blog-body {
-  padding-left: 15vw;
-  padding-right: 15vw;
-}
-.blog-h2 {
-  padding-left: 20vw;  
-  padding-right: 20vw;
-}
+  .blog-element {
+    padding-left: 15vw;  
+    padding-right: 15vw; 
+  }
+  .blog-sub-list{
+    padding-left:2vw;
+  }
+  .blog-sub-sub-list{
+    padding-left: 1vw;
+  }
 }
 
 /* Extra Large Devices (larger desktops, 1200px and up) */
 @media (min-width: 1200px) {
-.blog-body {
-  padding-left: 15vw;
-  padding-right: 15vw;
-}
-.blog-h2 {
-  padding-left: 25vw;  
-  padding-right: 25vw; 
-}
+  .blog-element {
+    padding-left: 15vw;  
+    padding-right: 15vw; 
+  }
+  .blog-sub-list{
+    padding-left:2vw;
+  }
+  .blog-sub-sub-list{
+    padding-left: 1vw;
+  }
 }
 
 /* Extra Extra Large Devices (larger desktops, 1400px and up) */
 @media (min-width: 1400px) {
-.blog-body {
-  padding-left: 15vw;
-  padding-right: 15vw;
-}
-.blog-h2 {
-  padding-left: 5vw;  /* Reduced padding for small screens */
-  padding-right: 5vw; /* Reduced padding for small screens */
-}
+  .blog-element {
+    padding-left: 18vw;  
+    padding-right: 18vw; 
+  }
+  .blog-sub-list{
+    padding-left:2vw;
+  }
+  .blog-sub-sub-list{
+    padding-left: 1vw;
+  }
 }
 
 .web-text{
@@ -326,11 +342,11 @@ margin: auto;
   font-family: 'Proxima Nova',roamingFont, sans-serif; /* Assuming roamingFont is defined */
   font-style: normal;
   text-transform: none;
-  color: #91A98F; /* Soft muted green */
+  color: #595456!important;
   margin: 0;
   font-size: clamp(1rem, calc(0.4rem + 1vw), 1.5rem);  /* More dynamic and responsive font sizing */
-  line-height: 1.6; /* Improved line height for readability */
-  letter-spacing: 0.1em; /* Added subtle letter-spacing for a clean, airy feel */
+  line-height: 1.4; /* Improved line height for readability */
+  letter-spacing: 0.06em; /* Added subtle letter-spacing for a clean, airy feel */
    /*text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow for a touch of depth */
 }
 

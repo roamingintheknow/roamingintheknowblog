@@ -1,9 +1,10 @@
 import BlogPost from '../blog_elements/BlogPost';
+import {BlogNavPanel} from '../blog_elements/BlogNavPanel';
 
 export default function Preview({ blog, setPreview }) {
 
   return (
-    <div>
+    <>
 {typeof setPreview === 'function' && (
   <button
     onClick={() => setPreview(false)}
@@ -13,9 +14,12 @@ export default function Preview({ blog, setPreview }) {
   </button>
 )}
 
+      <BlogNavPanel elements={blog?.elements} />
+      <BlogPost elements={blog?.elements} 
+                coverH={blog?.coverH} 
+                coverV={blog?.coverV} 
+                coverS={blog?.coverS} />
       
-      <BlogPost elements={blog?.elements} />
-      
-    </div>
+    </>
   );
 }

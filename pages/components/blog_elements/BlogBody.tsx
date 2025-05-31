@@ -5,7 +5,11 @@ interface BlogBodyProps {
 export function BlogBody({ text }: BlogBodyProps) {
   return (
     <div>
-      <p className="blog-body roaming-black-text">{text}</p>
+      <p
+        className="blog-body blog-element roaming-black-text"
+        dangerouslySetInnerHTML={{ __html: text }}
+      />
     </div>
   );
 }
+

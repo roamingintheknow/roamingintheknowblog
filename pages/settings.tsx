@@ -1,10 +1,11 @@
-import { signIn, useSession } from 'next-auth/react';
+import { signIn} from 'next-auth/react';
+import { useIsAdmin } from "@/lib/auth";
 import { useState, useEffect} from 'react';
 import ImagePreview from './components/ImagePreview';
 import ImageInput from './components/inputs/ImageInput';
 
 export default function Settings() {
-  const { data: session, status } = useSession();
+  const { isAdmin, session, loadingAdminStatus } = useIsAdmin();
   const [successMessage, setSuccessMessage] = useState('');
   // Rename the state variable to avoid conflict with the prop
   const [siteSettings, setSiteSettings] = useState({});
@@ -15,7 +16,7 @@ export default function Settings() {
       const response = await fetch('/api/getSiteSettings');
       const data = await response.json();
       if (response.ok) {
-        setSiteSettings(data.settings[0] || {});
+        setSiteSettings(data.settings || {});
       } else {
         console.error('Failed to fetch site settings:', data.error);
       }
@@ -28,13 +29,8 @@ export default function Settings() {
 
   // Use useEffect to call fetchSettings when session or status changes
   useEffect(() => {
-    if (session) {
-      fetchSettings();
-    } else if (status !== 'loading') {
-      // Redirect to sign-in page if user is not authenticated
-      signIn();
-    }
-  }, [session, status]);
+    fetchSettings();
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -46,6 +42,7 @@ async function handleSubmit() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.accessToken}`,
       },
       body: JSON.stringify(siteSettings),
     });
@@ -71,12 +68,12 @@ async function handleSubmit() {
     console.error('Error saving settings:', error);
   }
 }
-  async function handleLandingPhotoUpload({ url, position }) {
-    setSiteSettings((prev) => ({ ...prev, [`landingPhoto${position}`]: url }));
+  async function handleLandingPhotoUpload({ imageUrl,lowResUrl, type, position }) {
+    setSiteSettings((prev) => ({ ...prev, [`landingPhoto${position}`]: imageUrl }));
   }
 
-  async function handleAboutPhotoUpload({ url, position }) {
-    setSiteSettings((prev) => ({ ...prev, [`aboutPhoto${position}`]: url }));
+  async function handleAboutPhotoUpload({ imageUrl,lowResUrl, type, position  }) {
+    setSiteSettings((prev) => ({ ...prev, [`aboutPhoto${position}`]: imageUrl }));
   }
 
   function handleSlideShowIntervalChange(e) {
@@ -99,17 +96,16 @@ async function handleSubmit() {
     setSiteSettings((prev) => ({ ...prev, landingCaption: value }));
   }
 
-  function handleReplacePhoto(position) {
+  function handleReplacePhoto(position: string) {
     setSiteSettings((prev) => ({ ...prev, [`landingPhoto${position}`]: '' }));
   }
-  function handleReplaceAboutPhoto(position) {
+  function handleReplaceAboutPhoto(position: string) {
     setSiteSettings((prev) => ({ ...prev, [`aboutPhoto${position}`]: '' }));
   }
+  if (!isAdmin) return <p>Access Denied</p>;
 
-  if (!session) {
-    return <p>Redirecting to sign-in...</p>;
-  }
   return(
+
     <>
     {successMessage !=='' &&
       <>
@@ -138,7 +134,10 @@ async function handleSubmit() {
             {['1', '2', '3'].map((position) => (
               <div key={position} className="bg-white p-4 rounded-lg shadow-lg text-center">
                 {siteSettings[`landingPhoto${position}`] === '' ? (
-                  <ImageInput onImageUpload={(url) => handleLandingPhotoUpload({ url, position })} />
+                  <ImageInput type ='coverH'
+                  onUpload={handleLandingPhotoUpload} 
+                  existingImg={siteSettings[`landingPhoto${position}`]}
+                  position = {position} />
                 ) : (
                   <ImagePreview
                     imageUrl={siteSettings[`landingPhoto${position}`]}
@@ -176,7 +175,7 @@ async function handleSubmit() {
             {['1', '2', '3'].map((position) => (
               <div key={position} className="bg-white p-4 rounded-lg shadow-lg text-center">
                 {siteSettings[`aboutPhoto${position}`] === '' ? (
-                  <ImageInput onImageUpload={(url) => handleAboutPhotoUpload({ url, position })} />
+                  <ImageInput type ='coverS' onImageUpload={(url) => handleAboutPhotoUpload({ url, position })} />
                 ) : (
                   <ImagePreview
                     imageUrl={siteSettings[`aboutPhoto${position}`]}

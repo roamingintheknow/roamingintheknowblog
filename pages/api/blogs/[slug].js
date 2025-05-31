@@ -8,6 +8,7 @@ export default async function handler(req, res) {
     try {
       const blogsCollection = db.collection('blogs');
       const blog = await blogsCollection.findOne({ slug: slug });
+      console.log('blog we found...',blog)
       if (blog) {
         res.status(200).json({ blog });
       } else {

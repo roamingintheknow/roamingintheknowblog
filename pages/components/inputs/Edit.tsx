@@ -4,8 +4,39 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import ImageInput from './ImageInput';
 import ImagePreview from '../ImagePreview';
 import { v4 as uuidv4 } from 'uuid'; 
+import { useIsAdmin } from "@/lib/auth";
+import Preview from '../views/Preview';
+
+function PreviewToggle({isPreview,setIsPreview}){
+
+  return(
+    <>
+     <div className="flex gap-2 centered-children bottom-padding-sm roaming-white">
+    <button
+      onClick={() => setIsPreview(false)}
+      className={`px-6 py-3 rounded-lg shadow-md transition-all duration-200 ${
+        isPreview ? 'text-black roaming-black hover:roaming-green' : 'roaming-green text-white '
+      }`}    >
+      Edit
+    </button>
+    <button
+      onClick={() => setIsPreview(true)}
+      className={`px-6 py-3 rounded-lg shadow-md transition-all duration-200 ${
+        !isPreview ? 'text-black roaming-black hover:roaming-green' 
+      : 'roaming-green text-white hover:roaming-green'
+      }`}    >
+      Preview
+    </button>
+  </div>
+  </>
+  )
+}
 
 function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
+  
+  const { isAdmin, session, loadingAdminStatus } = useIsAdmin();
+  console.log('session...',session)
+
   const defaultElements = hideTitle 
   ? [] 
   : blog?.elements || [
@@ -17,7 +48,6 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
         id:uuidv4(),
       }
     ];
-
 
   const [elements, setElements] = useState(defaultElements);
   const [errors, setErrors] = useState(null);
@@ -35,19 +65,26 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
     coverV: '',
     coverS: '',
   });
-
+  const [isPreview, setIsPreview] = useState(false)
   useEffect(() => {
     if (blog) {
-      console.log('updating blogs and elements by blog+elements dep...',elements)
-      setElements(elements.length > 0 ? elements : blog.elements || defaultElements);
+      const parsedElements = blog.elements.map((el) => ({
+        ...el,
+        content: el.type === 'list' && typeof el.content === 'string'
+          ? JSON.parse(el.content)
+          : el.content,
+      }));
+  
+      setElements(parsedElements);
+      console.log('parsedelements...',parsedElements)
       setCurrentBlog((prevBlog) => ({
         ...prevBlog,
         ...blog,
-        elements: elements.length > 0 ? elements : blog.elements || defaultElements,
+        elements: parsedElements,
       }));
-      console.log('current blog data...',blog)
     }
-  }, [blog, elements]);
+  }, [blog]);
+  
 
   // const addElement = (type) => {
   //   setElements((prevElements) => [
@@ -87,7 +124,6 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
   
     // Set the currentBlog state only if the IDs have changed
     if (JSON.stringify(updatedElements) !== JSON.stringify(elements)) {
-      console.log('updating blogs and elements by elements dep...',updatedElements)
 
       setElements(updatedElements);
       setCurrentBlog((prevBlog) => ({
@@ -97,9 +133,10 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
     }
   }, [elements]); // This effect will only run when elements change
   
-  const handleContentChange = (index, event) => {
+  const handleContentChange = (index: number, value) => {
+    console.log('value recieved...',value)
     const newElements = [...elements];
-    newElements[index].content = event.target.value;
+    newElements[index].content = value;
     setElements(newElements);
     
     setCurrentBlog((prevBlog) => ({
@@ -117,7 +154,6 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
 
 
   const handleImageUpload = ({ index, url, subType, position }) => {
-
     setElements((prevElements) => {
       const newElements = [...prevElements];
   
@@ -141,17 +177,6 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
     });
 
   };
-  
-
-  // const onDragEnd = (result) => {
-  //   if (!result.destination) return;
-
-  //   const updatedElements = Array.from(elements);
-  //   const [movedElement] = updatedElements.splice(result.source.index, 1);
-  //   updatedElements.splice(result.destination.index, 0, movedElement);
-
-  //   setElements(updatedElements);
-  // };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -167,8 +192,8 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
     setCurrentBlog((prev) => ({ ...prev, tags: value.split(',').map(tag => tag.trim()) }));
   };
 
-  const handleCoverPhotoUpload = ({ url, type }) => {
-    setCurrentBlog((prev) => ({ ...prev, [type]: url }));
+  const handleCoverPhotoUpload = ({ imageUrl, lowResUrl, type }: { imageUrl: string; lowResUrl: string; type: string }) => {    console.log('handle cover photo Upload...', imageUrl, lowResUrl,type)
+    setCurrentBlog((prev) => ({ ...prev, [type]: imageUrl }));
   };
 
   const handleRemoveElement = (index) => {
@@ -176,7 +201,9 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
     setElements(newElements);
 
   };
+  const handleListAdd = (list) => {
 
+  }
   const prepareBlogSave = () => {
     const newErrors = [];
     if (currentBlog.title === ''&& !hideTitle) newErrors.push('Title is required.');
@@ -198,25 +225,33 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
   const saveBlog = async () => {
     const now = new Date();
 
-    const blogData = {
-      ...currentBlog,
-      created_at: currentBlog.created_at || now,
-      edited_at: now
-    };
+    // Convert the list arrays to strings before saving
+  const normalizedElements = currentBlog.elements.map((el) => ({
+    ...el,
+    content: el.type !== 'list'
+      ? el.content
+      : JSON.stringify(el.content), 
+  }));
+
+  const blogData = {
+    ...currentBlog,
+    elements: normalizedElements,
+    edited_at: now,
+  };
 
     try {
       const response = await fetch('/api/saveBlog', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.accessToken}`,
         },
         body: JSON.stringify({ blog: blogData }),
       });
 
       const data = await response.json();
       if (response.ok) {
-        console.log('response...',response)
-        console.log('blog data...',blogData)
+        setIsPreview(true)
         // window.location.href = `/view/${blogData.slug}`;
       } else {
         console.error('Failed to save blog:', data.error);
@@ -226,46 +261,52 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
     }
   };
 
+
+  if (!isAdmin) return <p>Access Denied</p>;
+
+  if (isPreview) return (
+    <>
+     <PreviewToggle isPreview={isPreview} setIsPreview={setIsPreview}/>
+     <Preview blog={currentBlog} setPreview={setPreview} />
+    </>
+  )
+  
+
+  
   return (
+    <>
     <div className="p-4 roaming-white">
-      <div className='flex justify-center'>
+     <PreviewToggle isPreview={isPreview} setIsPreview={setIsPreview}/>
+      {/* Drag & Drop Section */}
+      <div className="flex justify-center">
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable">
             {(provided) => (
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className="space-y-4"
+                className="space-y-4 w-full max-w-3xl"
               >
                 {elements.map((element, index) => (
                   <Draggable key={element.id} draggableId={element.id} index={index}>
-                    {/* {(provided) => (
+                    {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        className="bg-white p-4 border rounded shadow-sm"
-                        style={{ width: '80vw' }}
-                      > */}
-                      {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className={`p-4 border rounded shadow-sm ${
-                        snapshot.isDragging ? "bg-gray-200" : "bg-white"
-                      }`}
-                    >
+                        className={`p-4 border rounded shadow-sm ${
+                          snapshot.isDragging ? "bg-gray-200" : "bg-white"
+                        }`}
+                      >
                         <div className="flex justify-between items-center">
-                        <div className="flex flex-col items-center ml-4">
-                       
-            
-</div>
-
-
-
-                          <NewBlogInput element={element} index={index} onChange={handleContentChange} onImageUpload={handleImageUpload} />
-                          {element.type !== 'title' && (
+                          <NewBlogInput
+                            element={element}
+                            index={index}
+                            onChange={handleContentChange}
+                            handleListAdd={handleListAdd}
+                            onImageUpload={handleImageUpload}
+                          />
+                          {element.type !== "title" && (
                             <button
                               className="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center ml-4"
                               onClick={() => handleRemoveElement(index)}
@@ -284,44 +325,43 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
           </Droppable>
         </DragDropContext>
       </div>
-
+  
+      {/* Add Elements Section */}
       <div className="p-4 flex flex-wrap gap-4 justify-center">
-        <button
-          onClick={() => addElement('header')}
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-200"
-        >
-          + Header
-        </button>
-        <button
-          onClick={() => addElement('body')}
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-200"
-        >
-          + Body
-        </button>
-        <button
-          onClick={() => addElement('image')}
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-200"
-        >
-          + Image
-        </button>
+        {["header", "sub_header", "body", "list", "image"].map((type) => (
+          <button
+            key={type}
+            onClick={() => addElement(type)}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-200"
+          >
+            + {type.replace("_", " ")}
+          </button>
+        ))}
       </div>
-
+  
+      {/* Blog Details Section */}
       <div className="p-4 max-w-lg mx-auto bg-white rounded-lg shadow-md">
         {!hideTitle && (
           <>
-            <div className="mb-4">
-              <label htmlFor="country" className="block text-gray-700">Country</label>
-              <input
-                type="text"
-                id="country"
-                name="country"
-                value={currentBlog.country}
-                onChange={handleInputChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                style={{ color: 'black' }}
-              />
-            </div>
-
+            {[
+              { label: "Country", name: "country", type: "text", value: currentBlog.country },
+              { label: "Category", name: "category", type: "text", value: currentBlog.category },
+            ].map(({ label, name, type, value }) => (
+              <div key={name} className="mb-4">
+                <label htmlFor={name} className="block text-gray-700">{label}</label>
+                <input
+                  id={name}
+                  name={name}
+                  type={type}
+                  value={value}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  style={{ color: "black" }}
+                />
+              </div>
+            ))}
+  
+            {/* Continent Dropdown */}
             <div className="mb-4">
               <label htmlFor="continent" className="block text-gray-700">Continent</label>
               <select
@@ -329,82 +369,52 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
                 name="continent"
                 value={currentBlog.continent}
                 onChange={handleInputChange}
-                style={{ color: 'black' }}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                style={{ color: "black" }}
               >
                 <option value="" disabled>Select a category</option>
-                <option value="europe">Europe</option>
-                <option value="south_america">South America</option>
-                <option value="north_america">North America</option>
-                <option value="asia">Asia</option>
-                <option value="africa">Africa</option>
-                <option value="oceania">Oceania</option>
+                {["Europe", "South America", "North America", "Asia", "Africa", "Oceania"].map((c) => (
+                  <option key={c} value={c.toLowerCase()}>{c}</option>
+                ))}
               </select>
             </div>
-
+  
+            {/* Tags Input */}
             <div className="mb-4">
               <label htmlFor="tags" className="block text-gray-700">Tags</label>
               <input
-                type="text"
                 id="tags"
                 name="tags"
-                value={currentBlog.tags.join(', ')}
+                type="text"
+                value={currentBlog.tags.join(", ")}
                 onChange={handleTagsChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                style={{ color: 'black' }}
+                style={{ color: "black" }}
                 placeholder="comma separated tags"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="category" className="block text-gray-700">Category</label>
-              <input
-                type="text"
-                id="category"
-                name="category"
-                value={currentBlog.category}
-                onChange={handleInputChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                style={{ color: 'black' }}
               />
             </div>
           </>
         )}
-
-        <div className="mb-6 items-center">
-          <label className="block text-gray-700 font-medium mb-2 items-center">Cover Images</label>
-          <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-1 items-center">
-            <div>
-              <label className=" text-sm text-gray-600 mb-1">Horizontal Cover</label>
-              <ImageInput 
-                type="coverH" 
-                onUpload={handleCoverPhotoUpload} 
-                className="w-full "
-                existingImg ={currentBlog?.coverH}
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Vertical Cover</label>
-              <ImageInput 
-                type="coverV" 
-                onUpload={handleCoverPhotoUpload} 
-                className="w-full"
-                existingImg ={currentBlog?.coverV}
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Square Cover</label>
-              <ImageInput 
-                type="coverS" 
-                onUpload={handleCoverPhotoUpload} 
-                className="w-full"
-                existingImg ={currentBlog?.coverS}
-              />
-            </div>
+  
+        {/* Cover Images Section */}
+        <div className="mb-6">
+          <label className="block text-gray-700 font-medium mb-2">Cover Images</label>
+          <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-1">
+            {["Horizontal", "Vertical", "Square"].map((type) => (
+              <div key={type}>
+                <label className="block text-sm text-gray-600 mb-1">{type} Cover</label>
+                <ImageInput
+                  type={`cover${type[0]}`}
+                  onUpload={handleCoverPhotoUpload}
+                  className="w-full"
+                  existingImg={currentBlog[`cover${type[0]}`]}
+                />
+              </div>
+            ))}
           </div>
         </div>
-
-
+  
+        {/* Save Blog Button */}
         <div className="flex justify-end">
           <button
             onClick={prepareBlogSave}
@@ -413,8 +423,9 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
             Save Blog
           </button>
         </div>
-
-        {errors && (
+  
+        {/* Errors Display */}
+        {errors?.length > 0 && (
           <div className="mt-4">
             <ul className="text-red-500 list-disc list-inside">
               {errors.map((error, index) => (
@@ -425,7 +436,9 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
         )}
       </div>
     </div>
+    </>
   );
+  
 }
 
 export default Edit;

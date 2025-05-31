@@ -1,8 +1,6 @@
-import { connectToDatabase } from '@/lib/mongodb';
+import { connectToAdminDatabase } from '@/lib/mongodb';
 import { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./auth/[...nextauth]"; // Adjust the path based on your project structure
-
+import jwt from "jsonwebtoken";
 
 // Define TypeScript interface for settings
 interface Settings {
@@ -10,13 +8,16 @@ interface Settings {
   landingPhoto1: string;
   landingPhoto2: string;
   landingPhoto3: string;
-  createdAt?: Date;
+  tagline: string;
+  aboutBlurb: string;
+  created_at?: Date;
 }
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+
   // ✅ Allow only POST requests
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -24,16 +25,33 @@ export default async function handler(
 
   try {
     // ✅ Ensure the user is an admin before proceeding
-    const session = await getServerSession(req, res, authOptions);
-    if (!session || session.user.role !== "admin") {
-      return res.status(403).json({ error: "Unauthorized" });
-    }
-
-    const { db } = await connectToDatabase();
+        const authHeader = req.headers.authorization;
+        if (!authHeader?.startsWith("Bearer ")) {
+          return res.status(401).json({ error: "Missing or invalid authorization header" });
+        }
+    
+        const token = authHeader.split(" ")[1];
+        try {
+          const decoded = jwt.verify(token, process.env.NEXT_AUTH_SECRET as string) as {
+            email?: string;
+            sub?: string;
+            role?: string;
+            iat?: number;
+            exp?: number;
+            jti?: string;
+          };
+          if (!decoded|| decoded.role !== "admin") {
+            return res.status(403).json({ error: "Unauthorized" });
+          }
+        } catch (err) {
+          return res.status(401).json({ error: "Invalid token" });
+        }
+    const { db } = await connectToAdminDatabase();
     const collection = db.collection<Settings>("settings");
 
     // ✅ Validate the request body
     const settings: Settings = req.body;
+
     if (!settings?.landingPhoto1 || !settings?.landingPhoto2 || !settings?.landingPhoto3) {
       return res.status(400).json({ error: "Settings must have 3 image URLs" });
     }
@@ -44,7 +62,7 @@ export default async function handler(
     const { _id, ...settingsWithoutId } = settings;
     const updateData = {
       ...settingsWithoutId,
-      createdAt: currentTime,
+      created_at: currentTime,
     };
 
     const filter = {}; // Empty filter to always update the single settings document

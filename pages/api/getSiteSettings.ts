@@ -11,10 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Execute the aggregation pipeline
     const settings = await db.collection('settings')
-      .find()  // Get all documents
-      .sort({ created_at: -1 })  // Sort by creation date in descending order
-      .limit(1)
-      .toArray();
+      .findOne({}, { sort: { created_at: -1 } }); // Getting most recent ssettings
 
     return res.status(200).json({ settings });
   } catch (error) {

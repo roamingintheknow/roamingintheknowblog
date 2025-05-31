@@ -2,14 +2,12 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Edit from '../components/inputs/Edit'
-import Preview from '../components/views/Preview';
 
 const EditBlog=() =>{
   const router = useRouter();
   const { slug } = router.query;
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [preview, setPreview] = useState(false);
 
 
   useEffect(() => {
@@ -18,8 +16,17 @@ const EditBlog=() =>{
         try {
           const response = await fetch(`/api/blogs/${slug}`);
           const data = await response.json();
+          console.log('loaded blog...',data)
           if (response.ok) {
-            setBlog(data.blog);
+            const parsedElements = data.blog.elements.map((el: { type: string; content: any }) => ({
+              ...el,
+              content:
+                el.type === 'list' && typeof el.content === 'string'
+                  ? JSON.parse(el.content)
+                  : el.content,
+            }));
+  
+            setBlog({ ...data.blog, elements: parsedElements });
           } else {
             console.error('Failed to fetch blog:', data.error);
           }
@@ -39,11 +46,7 @@ const EditBlog=() =>{
 
   return (
 <div>
-    {preview ?
-      <Preview blog={blog}  setPreview={setPreview}/>
-    :
-    <Edit blog={blog} setPreview={setPreview}/>
-    }
+<Edit blog={blog} />
     </div>
   );
 }

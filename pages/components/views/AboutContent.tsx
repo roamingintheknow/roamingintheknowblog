@@ -3,9 +3,8 @@ import Image from 'next/image'
 import { signIn, useSession } from 'next-auth/react';
 
 
-export  function AboutContent(){
+export  function AboutContent({settings}){
   const { data: session, status } = useSession();
-  const [settings, setSiteSettings] = useState({})
   const [currentAboutImageIndex, setCurrentAboutImageIndex] = useState(0);
   const about_images = [
     settings?.aboutPhoto1? settings?.aboutPhoto1: 'https://res.cloudinary.com/busy-bee/image/upload/v1681391705/main/homePageHorizontal_ctpbfa.jpg',
@@ -20,48 +19,6 @@ export  function AboutContent(){
 
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, [currentAboutImageIndex, about_images.length]);
-
-  useEffect(() => {
-    // async function fetchBlogs() {
-    //   try {
-    //     const response = await fetch('/api/getRecentBlogs');
-    //     const data = await response.json();
-    //     if (response.ok) {
-    //       setRecentBlogs(data.blogs);
-    //     } else {
-    //       console.error('Failed to fetch blogs:', data.error);
-    //     }
-    //   } catch (error) {
-    //     console.error('Error fetching blogs:', error);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // }
-    async function fetchSettings() {
-      try {
-        const response = await fetch('/api/getSiteSettings');
-        const data = await response.json();
-        if (response.ok) {
-          setSiteSettings(data.settings[0]);
-        } else {
-          console.error('Failed to fetch site settings:', data.error);
-        }
-      } catch (error) {
-        console.error('Error fetching blogs:', error);
-      } finally {
-        // setLoading(false);
-      }
-    }
-    // if (session) {
-    //   // fetchBlogs();
-    //   fetchSettings();
-    // } else if (status !== 'loading') {
-    //   // Redirect to sign-in page if user is not authenticated
-    //   signIn();
-    // }
-     // fetchBlogs();
-     fetchSettings();
-  }, [ ]);
 
   
   return(

@@ -10,6 +10,8 @@ interface BlogPost {
   country: string;
   continent: string;
   matchScore?: number;
+  coverH?: string;
+  coverV?: string;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<{ blogs: BlogPost[] } | { error: string }>) {

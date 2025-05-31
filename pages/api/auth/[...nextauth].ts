@@ -2,6 +2,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoClient } from "mongodb";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const client = new MongoClient(process.env.MONGODB_URI as string);
 const db = client.db("roaming-blog-db");
@@ -43,16 +44,14 @@ export const authOptions: NextAuthOptions = {
           email: token.email as string,
           role: token.role as string,
         };
+        session.accessToken = jwt.sign(token, process.env.NEXT_AUTH_SECRET as string);
       }
-      console.log("Session:", session);
-      console.log("Session token:", token);
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
         token.role = user.role;
       }
-      console.log("JWT Token:", token);
       return token;
     }
   },
@@ -75,55 +74,8 @@ export const authOptions: NextAuthOptions = {
     },
   },
   debug: true,
-  // cookies: {
-  //   sessionToken: {
-  //     name: `__Secure-next-auth.session-token`,
-  //     options: {
-  //       httpOnly: true,
-  //       sameSite: "lax",
-  //       path: "/",
-  //       secure: process.env.NODE_ENV === "production",
-  //     },
-  //   },
-  // },
-  
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXT_AUTH_SECRET,
   pages: { signIn: "/login" }
 };
 
 export default NextAuth(authOptions);
-
-
-
-
-// import NextAuth from 'next-auth';
-// import GitHubProvider from 'next-auth/providers/github';
-// import GoogleProvider from 'next-auth/providers/google';
-// import FacebookProvider from 'next-auth/providers/facebook';
-// // import TwitterProvider from 'next-auth/providers/twitter';
-
-// export const authOptions = {
-//   // Configure one or more authentication providers
-//   providers: [
-
-//     GoogleProvider({
-//       clientId: process.env.GOOGLE_CLIENT_ID,
-//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//     }),
-//     // FacebookProvider({
-//     //   clientId: process.env.FACEBOOK_CLIENT_ID,
-//     //   clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-//     // }),
-//     // GitHubProvider({
-//     //   clientId: process.env.GITHUB_ID,
-//     //   clientSecret: process.env.GITHUB_SECRET,
-//     // }),
-//     // TwitterProvider({
-//     //   clientId: process.env.TWITTER_CLIENT_ID,
-//     //   clientSecret: process.env.TWITTER_CLIENT_SECRET,
-//     // }),
-//     // Add other providers here
-//   ],
-// };
-
-// export default NextAuth(authOptions);

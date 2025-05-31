@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ImagePreview from '../ImagePreview';
 
-const ImageInput = ({type, onUpload, existingImg}) => {
+const ImageInput = ({type, onUpload, existingImg, position}) => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -11,62 +11,17 @@ const ImageInput = ({type, onUpload, existingImg}) => {
   // Update preview if existingImg changes
   useEffect(() => {
     setImagePrev(existingImg);
-    console.log('existing image...',existingImg)
   }, [existingImg]);
   
-  const onImageUpload = ({imageUrl,lowResUrl})=>{
-    console.log('running callback...')
-    console.log(imageUrl,lowResUrl)
+  const onImageUpload = ({imageUrl,lowResUrl, type, position})=>{
     setImagePrev(imageUrl)
-    onUpload({ imageUrl,lowResUrl, type });
+    onUpload({ imageUrl,lowResUrl, type, position });
   }
 
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
 
-  // const handleUpload = async () => {
-  //   if (!image) return;
-  
-  //   setLoading(true);
-  //   setError(null);
-  
-  //   const cloudName = process.env.NEXT_PUBLIC_CLOUD_NAME;
-  //   const uploadPresets = {
-  //     coverH: process.env.NEXT_PUBLIC_HORIZONTAL_UPLOAD_PRESET,
-  //     coverV: process.env.NEXT_PUBLIC_VERTICAL_UPLOAD_PRESET,
-  //     coverS: process.env.NEXT_PUBLIC_SQUARE_UPLOAD_PRESET,
-  //     smallH: process.env.NEXT_PUBLIC_SMALL_HORIZONTAL_UPLOAD_PRESET,
-  //     smallV: process.env.NEXT_PUBLIC_SMALL_VERTICAL_UPLOAD_PRESET,
-  //   };
-  
-  //   // Determine the correct upload preset
-  //   const uploadPreset = uploadPresets[type];
-  //   if (!uploadPreset) {
-  //     setError(`Invalid upload type: ${type}. Please check your configuration.`);
-  //     setLoading(false);
-  //     return;
-  //   }
-  
-  //   const formData = new FormData();
-  //   formData.append('file', image);
-  //   formData.append('upload_preset', uploadPreset);
-  
-  //   try {
-  //     const { data } = await axios.post(
-  //       `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-  //       formData
-  //     );
-  //     const imageUrl = data.secure_url;
-  //     onImageUpload(imageUrl); // Callback for successful upload
-  //     setImage(null);
-  //   } catch (error) {
-  //     console.error('Upload error:', error.response?.data || error.message);
-  //     setError('Error uploading image. Please try again.');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   const handleUpload = async () => {
     if (!image) return;
   
@@ -106,21 +61,15 @@ const ImageInput = ({type, onUpload, existingImg}) => {
         '/upload/',
         '/upload/w_10,c_scale,q_auto,e_blur:200/'
       );
-      console.log('main...',imageUrl)
-      console.log('low res...',lowResUrl)
-      onImageUpload({ imageUrl, lowResUrl }); // Callback with both URLs
+      onImageUpload({ imageUrl, lowResUrl, type, position}); // Callback with both URLs
       setImage(null);
     } catch (error) {
-      console.error('Upload error:', error.response?.data || error.message);
       setError('Error uploading image. Please try again.');
     } finally {
       setLoading(false);
     }
   };
   
-  
-  
-
   return (
     !imagePrev ? (
       <div className="p-4 bg-white rounded-lg shadow-md ">

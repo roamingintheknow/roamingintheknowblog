@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BsInstagram, BsYoutube } from "react-icons/bs";
 import { SiTiktok } from "react-icons/si";
-import { useSession } from "next-auth/react"
 import PropTypes from 'prop-types';
 import Image from 'next/image'
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useIsAdmin } from "@/lib/auth";
+
 interface SubmenuItem {
   label: string;
   href?: string;
@@ -25,8 +26,8 @@ interface StickyHeaderProps {
 }
 
 export default function StickyHeader({ page }: StickyHeaderProps) {
-  const { data: session, status } = useSession();
-  const [searchTerm, setSearchTerm] = useState('');
+  const { isAdmin, loadingAdminStatus } = useIsAdmin();
+  // const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
 
   // const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
@@ -37,22 +38,18 @@ export default function StickyHeader({ page }: StickyHeaderProps) {
   //   }
   // };
   const [menuItems, setMenuItems] = useState([]);
-  const [isAdmin, setIsAdmin] =  useState(false);
   const [menuOpen, setMenuOpen]= useState(false);
   useEffect(() => {
     async function fetchMenuData() {
       // Fetch the menu data from your API
       const response = await fetch('/api/getMenuData');
       const data = await response.json();
-      console.log('menu items from db...',data)
       setMenuItems(data.menuItems);
     }
 
     fetchMenuData();
   }, []);
-  if(session && session?.user?.email =='shawn.hymers.developer@gmail.com' && !isAdmin){
-    setIsAdmin(true)
-  }
+
   const linkClass = (linkPath: string) =>
     linkPath === page ? 'roaming-yellow-text font-bold' : 'roaming-black-text hover:font-bold';
   const [clickedLink, setClickedLink] = useState(null);

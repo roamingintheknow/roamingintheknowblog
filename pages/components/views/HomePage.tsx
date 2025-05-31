@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSession, signIn } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import Image from 'next/image'
 import StickyHeader from '../nav/StickyHeader'
 import {humanizeText} from '../../helpers/helper_functions'
@@ -9,19 +9,40 @@ import { MdCopyright } from "react-icons/md";
 import Link from 'next/link';
 import {AboutContent} from './AboutContent'
 
+interface SiteSettings {
+  landingPhoto1?: string;
+  landingPhoto2?: string;
+  landingPhoto3?: string;
+  slideShowInterval?: number;
+  landingCaption?: string;
+}
+interface Blog {
+  id: string;
+  title: string;
+  category: string;
+  tags: string[];
+  coverH: string;
+  coverV: string;
+}
+interface BlogTileProps {
+  blog: Blog;
+}
+interface RecentBlogsProps {
+  blogs: [Blog];
+}
+
 export default function Home() {
-  const { data: session, status } = useSession();
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  
-  const [isAdmin, setIsAdmin] =  useState(false)
-  const [settings, setSiteSettings] = useState({})
-  const [loading, setLoading] = useState(true);
+
+  const [settings, setSiteSettings] = useState<SiteSettings>({});
+  // const [loading, setLoading] = useState(true);
   const [recentBlogs, setRecentBlogs] = useState([])
   // Define an array of image URLs
   const images = [
-    settings?.landingPhoto1? settings?.landingPhoto1: 'https://res.cloudinary.com/busy-bee/image/upload/v1681391705/main/homePageHorizontal_ctpbfa.jpg',
-    settings?.landingPhoto2? settings?.landingPhoto2:'https://res.cloudinary.com/busy-bee/image/upload/v1681391649/about/aboutPic15_n3eokt.jpg',
-    settings?.landingPhoto3? settings?.landingPhoto3:'https://res.cloudinary.com/busy-bee/image/upload/v1681391680/blogPics/inTheKnowArequipa/arequipa1_gjwlqi.jpg'
+    settings.landingPhoto1 || 'https://res.cloudinary.com/busy-bee/image/upload/v1681391705/main/homePageHorizontal_ctpbfa.jpg',
+    settings.landingPhoto2 || 'https://res.cloudinary.com/busy-bee/image/upload/v1681391649/about/aboutPic15_n3eokt.jpg',
+    settings.landingPhoto3 || 'https://res.cloudinary.com/busy-bee/image/upload/v1681391680/blogPics/inTheKnowArequipa/arequipa1_gjwlqi.jpg'
   ];
 
 
@@ -49,7 +70,7 @@ export default function Home() {
       } catch (error) {
         console.error('Error fetching blogs:', error);
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     }
     async function fetchSettings() {
@@ -57,29 +78,21 @@ export default function Home() {
         const response = await fetch('/api/getSiteSettings');
         const data = await response.json();
         if (response.ok) {
-          setSiteSettings(data.settings[0]);
+          setSiteSettings(data.settings);
         } else {
           console.error('Failed to fetch site settings:', data.error);
         }
       } catch (error) {
         console.error('Error fetching blogs:', error);
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     }
-    fetchBlogs();
     fetchSettings();
-    // if (session) {
-    //   fetchBlogs();
-    //   fetchSettings();
-    // } else if (status !== 'loading') {
-    //   // Redirect to sign-in page if user is not authenticated
-    //   signIn();
-    // }
-  }, [session, status]);
-  if(session && session.user.email =='shawn.hymers.developer@gmail.com' && !isAdmin){
-    setIsAdmin(true)
-  }
+    fetchBlogs();
+
+  }, []);
+
   return (
     <>
       <StickyHeader page="home"/>
@@ -100,11 +113,11 @@ export default function Home() {
   {/* Centered Content */}
   <div className="relative z-10 flex flex-col items-center space-y-4">
     <p className="text-4xl md:text-6xl font-bold roaming-yellow-text">Roaming In The Know</p>
-    <p className="text-lg md:text-2xl romaing-yellow-text">{settings.landingCaption}</p>
+    {/* <p className="text-lg md:text-2xl romaing-yellow-text">{settings.landingCaption}</p> */}
   </div>
 </div>
 
-<AboutContent/>
+<AboutContent settings={settings}/>
 
 
 
@@ -117,13 +130,12 @@ export default function Home() {
 
 
 const TagSearch = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [tags, setTags] = useState([]);
   const [selectedTag, setSelectedTag] = useState('');
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCat, setSelectedCat] = useState('');
-  const [loading, setLoading] = useState(true);
 
   // Fetch categories
   useEffect(() => {
@@ -188,7 +200,7 @@ const TagSearch = () => {
   }, [selectedTag]);
 
   // Handle change in selected category
-  const handleCategoryChange = (cat) => {
+  const handleCategoryChange = (cat: string) => {
     setSelectedCat(cat);
     setSelectedTag(''); // Reset selected tag on category change
   };
@@ -241,7 +253,7 @@ const TagSearch = () => {
   );
 };
 
-const BlogTileV = ({ blog }) => {
+const BlogTileV = ({ blog }:BlogTileProps) => {
 
   return(
 <>
@@ -271,7 +283,7 @@ const BlogTileV = ({ blog }) => {
 </>
   )
 }
-const BlogTileH = ({ blog }) => {
+const BlogTileH = ({ blog }:BlogTileProps) => {
 
   return(
 <>
@@ -302,7 +314,7 @@ const BlogTileH = ({ blog }) => {
 </>
   )
 }
-const RecentBlogs = ({blogs})=>{
+const RecentBlogs = ({blogs}:RecentBlogsProps)=>{
   return(
     <div className="flex gap-4 mt-8">
     {blogs.length > 0 && (
@@ -323,10 +335,59 @@ const RecentBlogs = ({blogs})=>{
   )
 }
 const Footer = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+    const { name, email, message } = formData;
+  
+    // Basic validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isValid = name.trim() && emailRegex.test(email) && message.trim().length >= 10;
+  
+    if (!isValid) {
+      alert("Please fill out all fields correctly:\n- Valid email\n- Message at least 10 characters");
+      return;
+    }
+  
+    setSending(true);
+  
+    try {
+      await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      
+  
+      setSent(true);
+      setFormData({ name: "", email: "", message: "" });
+  
+      setTimeout(() => {
+        setIsModalOpen(false);
+        setSent(false);
+      }, 2000);
+    } catch (error) {
+      console.error("❌ Error sending message:", error);
+    } finally {
+      setSending(false);
+    }
+  };
+  
   return (
+    <>
     <div className="footer font-customTrebuchet" >
       <div className="left-section">
-      <button className="ml-2 px-3 py-1 text-md roaming-yellow romaing-black-text rounded-md hover:bg-roaming-green">
+      <button className="ml-2 px-3 py-1 text-md roaming-yellow romaing-black-text rounded-md hover:bg-roaming-green"
+       onClick={() => setIsModalOpen(true)}>
         Contact
       </button>
       </div>
@@ -358,8 +419,62 @@ const Footer = () => {
           <Link href="/terms">Terms & Conditions</Link>
         </div>
       </div>
-
     </div>
+     {/* Contact Modal */}
+     {isModalOpen && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+        <div className="bg-white rounded-xl p-6 max-w-md w-full relative shadow-xl">
+          <button
+            className="absolute top-2 right-3 text-gray-500 hover:text-black text-xl"
+            onClick={() => setIsModalOpen(false)}
+          >
+            ×
+          </button>
+          <h2 className="text-xl font-bold mb-4">Send us a message</h2>
+          {sent ? (
+            <p className="roaming-green-text font-semibold">Thanks for your message!</p>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                type="text"
+                name="name"
+                placeholder="Your name"
+                required
+                value={formData.name}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 roaming-black-text"
+              />
+              <input
+                type="email"
+                name="email"
+                placeholder="Your email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 roaming-black-text"
+              />
+              <textarea
+                name="message"
+                placeholder="Your message..."
+                required
+                rows={4}
+                value={formData.message}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 roaming-black-text"
+              />
+              <button
+                type="submit"
+                disabled={sending}
+                className="w-full roaming-yellow text-black rounded-md py-2 font-semibold hover:roaming-green"
+              >
+                {sending ? "Sending..." : "Send"}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    )}
+    </>
   );
 };
 
