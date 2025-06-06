@@ -17,7 +17,7 @@ interface BlogPostProps {
 export default function BlogPost({ elements,coverH,coverV,coverS, hideTitle = false }: BlogPostProps) {
   return (
     <div
-      className="full-width roaming-white blog-container flex flex-col space-y-4 items-start"
+      className="full-width bg-white blog-container flex flex-col space-y-4 items-start"
       style={{
         margin: '0vh',
         paddingLeft: '0vh',

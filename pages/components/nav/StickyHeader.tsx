@@ -26,7 +26,7 @@ interface StickyHeaderProps {
 }
 
 export default function StickyHeader({ page }: StickyHeaderProps) {
-  const { isAdmin, loadingAdminStatus } = useIsAdmin();
+  const { isAdmin} = useIsAdmin();
   // const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
 
@@ -37,30 +37,54 @@ export default function StickyHeader({ page }: StickyHeaderProps) {
   //     setSearchTerm('');
   //   }
   // };
-  const [menuItems, setMenuItems] = useState([]);
+  const [menuItems, setMenuItems] = useState([
+    {
+      label: 'North America',
+      submenu: [
+        { label: 'Canada' },
+        { label: 'Mexico' },
+      ],
+    },
+    {
+      label: 'South America',
+      submenu: [
+        { label: 'Equador' },
+        { label: 'Colombia' },
+        { label: 'Peru' },
+      ],
+    },
+    {
+      label: 'Asia',
+      submenu: [
+        { label: 'Japan' },
+        { label: 'South Korea' },
+        { label: 'The Phillippines' },
+      ],
+    },
+  ]);
+  
   const [menuOpen, setMenuOpen]= useState(false);
-  useEffect(() => {
-    async function fetchMenuData() {
-      // Fetch the menu data from your API
-      const response = await fetch('/api/getMenuData');
-      const data = await response.json();
-      setMenuItems(data.menuItems);
-    }
+  // useEffect(() => {
+  //   async function fetchMenuData() {
+  //     // Fetch the menu data from your API
+  //     const response = await fetch('/api/getMenuData');
+  //     const data = await response.json();
+  //     setMenuItems(data.menuItems);
+  //   }
 
-    fetchMenuData();
-  }, []);
-
+  //   fetchMenuData();
+  // }, []);
   const linkClass = (linkPath: string) =>
     linkPath === page ? 'roaming-yellow-text font-bold' : 'roaming-black-text hover:font-bold';
-  const [clickedLink, setClickedLink] = useState(null);
+  const [clickedLink, setClickedLink] = useState<string | null>(null);
 
-  const handleLinkClick = (path) => {
+  const handleLinkClick = (path: string) => {
     setClickedLink(path);
 
     router.push(path);
   };
   return(
-<header className="sticky top-0 w-full bg-white shadow-md z-20 font-customTrebuchet px-6">
+<header className="sticky top-0 w-full roaming-white shadow-md z-20 font-customTrebuchet px-6">
 
   <div className="max-w-full mx-auto flex items-center justify-between py-4">
     {/* Left Section: Navigation Links */}

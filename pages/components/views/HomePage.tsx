@@ -9,13 +9,13 @@ import { MdCopyright } from "react-icons/md";
 import Link from 'next/link';
 import {AboutContent} from './AboutContent'
 
-interface SiteSettings {
-  landingPhoto1?: string;
-  landingPhoto2?: string;
-  landingPhoto3?: string;
-  slideShowInterval?: number;
-  landingCaption?: string;
-}
+// interface SiteSettings {
+//   landingPhoto1?: string;
+//   landingPhoto2?: string;
+//   landingPhoto3?: string;
+//   slideShowInterval?: number;
+//   landingCaption?: string;
+// }
 interface Blog {
   id: string;
   title: string;
@@ -27,79 +27,131 @@ interface Blog {
 interface BlogTileProps {
   blog: Blog;
 }
-interface RecentBlogsProps {
+interface BlogListProps {
   blogs: [Blog];
 }
 
-export default function Home() {
+export default function Home({recentBlogs, popularBlogs}) {
+  // const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  const [settings, setSiteSettings] = useState<SiteSettings>({});
+  // const [settings, setSiteSettings] = useState<SiteSettings>({});
   // const [loading, setLoading] = useState(true);
-  const [recentBlogs, setRecentBlogs] = useState([])
+
   // Define an array of image URLs
-  const images = [
-    settings.landingPhoto1 || 'https://res.cloudinary.com/busy-bee/image/upload/v1681391705/main/homePageHorizontal_ctpbfa.jpg',
-    settings.landingPhoto2 || 'https://res.cloudinary.com/busy-bee/image/upload/v1681391649/about/aboutPic15_n3eokt.jpg',
-    settings.landingPhoto3 || 'https://res.cloudinary.com/busy-bee/image/upload/v1681391680/blogPics/inTheKnowArequipa/arequipa1_gjwlqi.jpg'
-  ];
+  // const images = [
+  //   settings.landingPhoto1 || 'https://res.cloudinary.com/busy-bee/image/upload/v1681391705/main/homePageHorizontal_ctpbfa.jpg',
+  //   settings.landingPhoto2 || 'https://res.cloudinary.com/busy-bee/image/upload/v1681391649/about/aboutPic15_n3eokt.jpg',
+  //   settings.landingPhoto3 || 'https://res.cloudinary.com/busy-bee/image/upload/v1681391680/blogPics/inTheKnowArequipa/arequipa1_gjwlqi.jpg'
+  // ];
 
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const nextIndex = (currentImageIndex + 1) % images.length;
-      setCurrentImageIndex(nextIndex);
-    }, settings?.slideShowInterval ? settings?.slideShowInterval*1000 : 3000); // Switch images every 3 seconds
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const nextIndex = (currentImageIndex + 1) % images.length;
+  //     setCurrentImageIndex(nextIndex);
+  //   }, settings?.slideShowInterval ? settings?.slideShowInterval*1000 : 3000); // Switch images every 3 seconds
 
-    return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, [currentImageIndex, images.length]);
+  //   return () => clearInterval(interval); // Cleanup interval on component unmount
+  // }, [currentImageIndex, images.length]);
 
 
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     try {
+  //       const [recentRes, popularRes] = await Promise.all([
+  //         fetch('/api/getRecentBlogs'),
+  //         fetch('/api/getPopularBlogs'),
+  //       ]);
   
-  useEffect(() => {
-    async function fetchBlogs() {
-      try {
-        const response = await fetch('/api/getRecentBlogs');
-        const data = await response.json();
-        if (response.ok) {
-          setRecentBlogs(data.blogs);
-        } else {
-          console.error('Failed to fetch blogs:', data.error);
-        }
-      } catch (error) {
-        console.error('Error fetching blogs:', error);
-      } finally {
-        // setLoading(false);
-      }
-    }
-    async function fetchSettings() {
-      try {
-        const response = await fetch('/api/getSiteSettings');
-        const data = await response.json();
-        if (response.ok) {
-          setSiteSettings(data.settings);
-        } else {
-          console.error('Failed to fetch site settings:', data.error);
-        }
-      } catch (error) {
-        console.error('Error fetching blogs:', error);
-      } finally {
-        // setLoading(false);
-      }
-    }
-    fetchSettings();
-    fetchBlogs();
+  //       const [recentData, popularData] = await Promise.all([
+  //         recentRes.json(),
+  //         popularRes.json(),
+  //       ]);
+  
+  //       if (recentRes.ok) {
+  //         setRecentBlogs(recentData.blogs);
+  //       } else {
+  //         console.error('Failed to fetch recent blogs:', recentData.error);
+  //       }
+  
+  //       if (popularRes.ok) {
+  //         setPopularBlogs(popularData.blogs);
+  //       } else {
+  //         console.error('Failed to fetch popular blogs:', popularData.error);
+  //       }
+  //     } catch (err) {
+  //       console.error('Error fetching blogs:', err);
+  //     }
+  //   }
+  
+  //   fetchData();
+  // }, []);
+  
+  // useEffect(() => {
+  //   async function fetchRecentBlogs() {
+  //     try {
+  //       const response = await fetch('/api/getRecentBlogs');
+  //       const data = await response.json();
+  //       if (response.ok) {
+  //         setRecentBlogs(data.blogs);
+  //       } else {
+  //         console.error('Failed to fetch blogs:', data.error);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching blogs:', error);
+  //     } finally {
+  //       // setLoading(false);
+  //     }
+  //   }
+  //   async function fetchPopularBlogs() {
+  //     try {
+  //       const response = await fetch('/api/getPopularBlogs');
+  //       const data = await response.json();
+  //       if (response.ok) {
+  //         setPopularBlogs(data.blogs);
+  //       } else {
+  //         console.error('Failed to fetch blogs:', data.error);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching blogs:', error);
+  //     } finally {
+  //       // setLoading(false);
+  //     }
+  //   }
+  //   // async function fetchSettings() {
+  //   //   try {
+  //   //     const response = await fetch('/api/getSiteSettings');
+  //   //     const data = await response.json();
+  //   //     if (response.ok) {
+  //   //       setSiteSettings(data.settings);
+  //   //     } else {
+  //   //       console.error('Failed to fetch site settings:', data.error);
+  //   //     }
+  //   //   } catch (error) {
+  //   //     console.error('Error fetching blogs:', error);
+  //   //   } finally {
+  //   //     // setLoading(false);
+  //   //   }
+  //   // }
+  //   // fetchSettings();
+  //   fetchRecentBlogs();
+  //   fetchPopularBlogs();
 
-  }, []);
+  // }, []);
+  
 
   return (
     <>
       <StickyHeader page="home"/>
+      {/* Most Popular Guides */}
 
-      <div className="relative w-screen h-screen overflow-hidden flex items-center justify-center ">
+      <BlogList blogs={popularBlogs}/>
+      <CountryList />
+      {/* <div className="relative w-screen h-screen overflow-hidden flex items-center justify-center "> */}
+ 
+ 
   {/* Image Block with Overlay */}
-  <div className="absolute inset-0">
+  {/* <div className="absolute inset-0">
     <Image
       src={images[currentImageIndex]}
       alt={`Slide ${currentImageIndex}`}
@@ -107,27 +159,55 @@ export default function Home() {
       style={{ objectFit: 'cover' }}
       className="object-cover"
     />
-    <div className="absolute inset-0 bg-black opacity-20"></div> {/* Add a subtle overlay */}
-  </div>
+    <div className="absolute inset-0 bg-black opacity-20"></div> 
+  </div> */}
   
   {/* Centered Content */}
-  <div className="relative z-10 flex flex-col items-center space-y-4">
-    <p className="text-4xl md:text-6xl font-bold roaming-yellow-text">Roaming In The Know</p>
+  {/* <div className="relative z-10 flex flex-col items-center space-y-4">
+    <p className="text-4xl md:text-6xl font-bold roaming-yellow-text">Roaming In The Know</p> */}
     {/* <p className="text-lg md:text-2xl romaing-yellow-text">{settings.landingCaption}</p> */}
-  </div>
-</div>
+  {/* </div> */}
+{/* </div> */}
 
-<AboutContent settings={settings}/>
-
-
-
-    <TagSearch />
-    {/* <RecentBlogs blogs={recentBlogs}/> */}
+<AboutContent />
+<BlogGrid blogs={recentBlogs}/>
+    {/* <TagSearch /> */}
+    {/* <BlogList blogs={recentBlogs}/> */}
     <Footer/>
     </>
   );
 }
 
+
+const BlogGrid = ({blogs}) =>  {
+  return(
+    <div className="bg-white py-12 px-6">
+    <h1 className="blog-header roaming-black-text blog-h1 mb-8 pl-2">
+      Recent Posts:
+    </h1>
+  <div className="flex gap-4 mt-8">
+    {/* Left Spacer */}
+    <div className="w-4" />
+  {blogs.length > 0 && (
+    <>
+      <div className="w-1/2 flex flex-col gap-4" style={{ minHeight: '90vh' }}>
+        {blogs.slice(0, 3).map((blog, index) => (
+          <BlogTileH key={index} blog={blog} />
+        ))}
+      </div>
+      <div className="w-1/2 flex flex-col gap-4" style={{ minHeight: '90vh' }}>
+        {blogs.slice(4, 7).map((blog, index) => (
+          <BlogTileH key={index} blog={blog} />
+        ))}
+      </div>
+    </>
+  )}
+  {/* Right Spacer */}
+  <div className="w-4" />
+</div>
+</div>
+)
+}
 
 const TagSearch = () => {
   const { data: session } = useSession();
@@ -253,36 +333,34 @@ const TagSearch = () => {
   );
 };
 
-const BlogTileV = ({ blog }:BlogTileProps) => {
+const BlogTileV = ({ blog }: BlogTileProps) => {
+  return (
+    <a
+      href={`/view/${blog.title.replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '_').toLowerCase()}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <div className="relative w-full aspect-[3/4] group overflow-hidden rounded-sm">
+        <Image
+          src={blog.coverV}
+          alt={`Blog Cover Img ${blog.title}`}
+          fill
+          className="object-contain rounded-sm"
+              style={{ objectFit: 'cover' }}
 
-  return(
-<>
-<a 
-  href={`/view/${blog.title.replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '_').toLowerCase()}`}
-  target="_blank" 
-  rel="noopener noreferrer"
->
-<div className="relative w-full h-full group">
-  <Image
-    src={blog.coverV}
-    alt={`Blog Cover Img ${blog.title}`}
-    fill 
-    style={{ objectFit: 'cover' }}
-    className="rounded-lg"
-  />
-<div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity duration-300 rounded-lg" />
-<div className="absolute inset-0 flex items-center justify-center px-4 ">
-  <p className="text-center img-caption roaming-yellow-text whitespace-normal leading-snug">
-    {blog.title.replace(/\b\w/g, (char) => char.toUpperCase())}
-  </p>
-</div>
-</div>
-</a>
+        />
 
-           
-</>
-  )
-}
+        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity duration-300" />
+        <div className="absolute inset-0 flex items-center justify-center px-4">
+          <p className="text-center img-caption roaming-yellow-text whitespace-normal leading-snug">
+            {blog.title.replace(/\b\w/g, (char) => char.toUpperCase())}
+          </p>
+        </div>
+      </div>
+    </a>
+  );
+};
+
 const BlogTileH = ({ blog }:BlogTileProps) => {
 
   return(
@@ -299,9 +377,9 @@ const BlogTileH = ({ blog }:BlogTileProps) => {
     alt={`Blog Cover Img ${blog.title}`}
     fill 
     style={{ objectFit: 'cover' }}
-    className="rounded-lg"
+    className="rounded-sm"
   />
-  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity duration-300 rounded-lg" />
+  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity duration-300 rounded-sm" />
   <div className="absolute inset-0 flex items-center justify-center">
     <p className="text-center img-caption roaming-yellow-text">
           {blog.title.replace(/\b\w/g, (char) => char.toUpperCase())}
@@ -314,26 +392,100 @@ const BlogTileH = ({ blog }:BlogTileProps) => {
 </>
   )
 }
-const RecentBlogs = ({blogs}:RecentBlogsProps)=>{
-  return(
-    <div className="flex gap-4 mt-8">
-    {blogs.length > 0 && (
-      <>
-        <div className="w-1/2">
-          <BlogTileV blog={blogs[0]} />
-        </div>
-        <div className="w-1/2 flex flex-col gap-4">
-          {blogs.slice(1, 4).map((blog, index) => (
-            <div key={index} className="flex-1">
-              <BlogTileH blog={blog} />
+
+const CountryList = () => {
+  const countryList = [
+    { name: "Canada", image: "https://res.cloudinary.com/dqiq7slio/image/upload/v1735439799/travel_blog_images/pqejvutqsdvkpebpqofd.webp" },
+    { name: "Japan", image: "/flags/japan.jpg" },
+    { name: "Peru", image: "/flags/peru.jpg" },
+    { name: "Korea", image: "/flags/korea.jpg" },
+    { name: "Colombia", image: "/flags/colombia.jpg" },
+    { name: "Ecuador", image: "/flags/ecuador.jpg" },
+    { name: "India", image: "https://res.cloudinary.com/dqiq7slio/image/upload/v1741592390/travel_blog_images/rns09irklynmawbigsfh.webp" },
+    { name: "Sri Lanka", image: "/flags/sri-lanka.jpg" },
+    { name: "Vietnam", image: "/flags/vietnam.jpg" },
+  ];
+
+  return (
+    <div className="bg-white py-8 px-6">
+      <h1 className="blog-header roaming-black-text blog-h1 mb-8 pl-2">
+        Explore By Country:
+      </h1>
+
+      <div className="flex flex-wrap gap-6 justify-center">
+        {countryList.map(({ name, image }) => (
+          <div key={name} className="flex flex-col items-center space-y-2">
+            <div className="w-20 h-20 rounded-full overflow-hidden shadow-md">
+              <Image
+                src={image}
+                alt={`${name} flag`}
+                width={80}
+                height={80}
+                className="object-cover"
+              />
+            </div>
+            <span className="text-sm text-gray-700">{name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const BlogList = ({ blogs }: BlogListProps) => {
+  if (!blogs.length) return null;
+
+  return (
+    <div className="bg-white py-12 px-6">
+      <h1 className="roaming-black-text blog-h1 mb-8 pl-2 text-3xl lg:text-4xl font-bold text-gray-800">
+        Most Popular Guides:
+      </h1>
+
+      <div className="overflow-x-auto scrollbar-hide">
+        <div className="flex gap-6 px-2 w-max">
+          {blogs.map((blog, index) => (
+            <div key={index} className="flex-shrink-0 w-64">
+              <BlogTileV blog={blog} />
             </div>
           ))}
         </div>
-      </>
-    )}
-  </div>
-  )
-}
+      </div>
+    </div>
+  );
+};
+
+// const BlogList = ({ blogs }: BlogListProps) => {
+//   if (!blogs.length) return null;
+//   console.log('popular blogs...',blogs)
+//   return (
+//     <div className="bg-white py-12 px-6">
+//       <h1 className="blog-header roaming-black-text blog-h1 mb-8 pl-2">
+//         Most Popular Guides:
+//       </h1>
+
+//       <div className="grid grid-cols-[1fr_repeat(3,auto)_1fr] gap-x-10 gap-y-12 justify-items-center w-full">
+        // {/* Left Spacer */}
+        // <div className="w-4" />
+
+//         {/* Blog Tiles */}
+//         {blogs.map((blog, index) => (
+//           <div key={index} className="w-64">
+//             <BlogTileV blog={blog} />
+//           </div>
+//         ))}
+
+//         {/* Right Spacer */}
+//         <div className="w-4" />
+//       </div>
+//     </div>
+//   );
+// };
+
+
+
+
+
+
 const Footer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -384,7 +536,7 @@ const Footer = () => {
   
   return (
     <>
-    <div className="footer font-customTrebuchet" >
+    <div className="footer  roaming-white" >
       <div className="left-section">
       <button className="ml-2 px-3 py-1 text-md roaming-yellow romaing-black-text rounded-md hover:bg-roaming-green"
        onClick={() => setIsModalOpen(true)}>
@@ -413,7 +565,7 @@ const Footer = () => {
         
         <div className="text-row roaming-black-text flex items-center space-x-2">
           <MdCopyright aria-label="Copyright" />
-          <span>2024 Roaming In The Know. All Rights Reserved</span>
+          <span>2025 Roaming In The Know. All Rights Reserved</span>
         </div>
         <div className="text-row roaming-black-text">
           <Link href="/terms">Terms & Conditions</Link>

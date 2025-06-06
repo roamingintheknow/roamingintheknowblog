@@ -43,10 +43,8 @@ export function BlogImage({ element }: BlogImageProps) {
     return uniformWidth; // Full width for single layouts
   };
 
-  console.log('urls...', urls);
-
   return (
-    <div className="w-full">
+    <div className="w-full blog-element">
       {['lh', 'lv', 'vd', 'vt', 'hd', 'hs'].includes(subType) && (
         <div
           className={`w-full ${

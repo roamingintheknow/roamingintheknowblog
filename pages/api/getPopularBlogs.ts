@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .collection('blogs')
       .find({})
       .sort({ edited_at: -1 }) // Sort by `edited_at` in descending order
-      .limit(4)                // Limit the result to 5 blogs
+      .limit(7)                // Limit the result to 5 blogs
       .toArray();
 
     return res.status(200).json({ blogs });

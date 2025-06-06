@@ -181,12 +181,12 @@ color: #E2B54B;
 font-size: calc((4.4 - 1) * 0.9vw + 1rem);
 }
 .blog-h1{
-font-family: 'Proxima Nova',roamingFont;
-font-weight: 500;
+/* font-family: 'Proxima Nova',roamingFont; */
+font-weight: 800;
 text-transform: none;
-line-height: 1.4em;
+line-height: 1.3em;
 color: #B97F51;
-font-size: calc((3.4 - 1) * 0.9vw + 0.7rem);
+font-size: calc((3.2 - 1) * 0.9vw + 0.7rem);
 }
 
 .blog-h2 {
@@ -251,8 +251,8 @@ font-size: calc((3.4 - 1) * 0.9vw + 0.7rem);
 /* Medium Devices (desktops, 768px and up) */
 @media (min-width: 768px) {
   .blog-element {
-    padding-left: 10vw;  
-    padding-right: 10vw; 
+    padding-left: 20vw;  
+    padding-right: 20vw; 
   }
   .blog-sub-list{
     padding-left:2vw;
@@ -265,8 +265,8 @@ font-size: calc((3.4 - 1) * 0.9vw + 0.7rem);
 /* Large Devices (large desktops, 992px and up) */
 @media (min-width: 992px) {
   .blog-element {
-    padding-left: 15vw;  
-    padding-right: 15vw; 
+    padding-left: 20vw;  
+    padding-right: 20vw; 
   }
   .blog-sub-list{
     padding-left:2vw;
@@ -279,8 +279,8 @@ font-size: calc((3.4 - 1) * 0.9vw + 0.7rem);
 /* Extra Large Devices (larger desktops, 1200px and up) */
 @media (min-width: 1200px) {
   .blog-element {
-    padding-left: 15vw;  
-    padding-right: 15vw; 
+    padding-left: 25vw;  
+    padding-right: 25vw; 
   }
   .blog-sub-list{
     padding-left:2vw;

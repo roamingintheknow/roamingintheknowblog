@@ -38,7 +38,7 @@ export  function CollabContent(){
       width={300}
       height={400}
       layout="responsive"
-      className="rounded-lg group-hover:scale-105 transition-transform duration-300"
+      className="rounded-sm group-hover:scale-105 transition-transform duration-300"
     />
     <div className="absolute inset-0 flex items-center justify-center px-4">
       <p className="text-center img-caption roaming-yellow-text whitespace-normal leading-snug">
@@ -62,7 +62,7 @@ export  function CollabContent(){
           width={300} 
           height={400} 
           layout="responsive" 
-          className="rounded-lg group-hover:scale-105 transition-transform duration-300"
+          className="rounded-sm group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute inset-0 flex items-center justify-center px-4">
           <p className="text-center img-caption roaming-yellow-text whitespace-normal leading-snug">
@@ -85,7 +85,7 @@ export  function CollabContent(){
           width={300} 
           height={400} 
           layout="responsive" 
-          className="rounded-lg group-hover:scale-105 transition-transform duration-300"
+          className="rounded-sm group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute inset-0 flex items-center justify-center px-4">
           <p className="text-center img-caption roaming-yellow-text whitespace-normal leading-snug">

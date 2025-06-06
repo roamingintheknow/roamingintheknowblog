@@ -132,7 +132,7 @@ async function handleSubmit() {
 
           <div className="flex justify-center flex-wrap gap-6 mt-6">
             {['1', '2', '3'].map((position) => (
-              <div key={position} className="bg-white p-4 rounded-lg shadow-lg text-center">
+              <div key={position} className="bg-white p-4 rounded-sm shadow-lg text-center">
                 {siteSettings[`landingPhoto${position}`] === '' ? (
                   <ImageInput type ='coverH'
                   onUpload={handleLandingPhotoUpload} 
@@ -173,7 +173,7 @@ async function handleSubmit() {
 
           <div className="flex justify-center flex-wrap gap-6 mt-6">
             {['1', '2', '3'].map((position) => (
-              <div key={position} className="bg-white p-4 rounded-lg shadow-lg text-center">
+              <div key={position} className="bg-white p-4 rounded-sm shadow-lg text-center">
                 {siteSettings[`aboutPhoto${position}`] === '' ? (
                   <ImageInput type ='coverS' onImageUpload={(url) => handleAboutPhotoUpload({ url, position })} />
                 ) : (
@@ -224,7 +224,7 @@ async function handleSubmit() {
         <div className="flex justify-center mt-10 bottom-padding-lg">
           <button
             onClick={handleSubmit}
-            className="bg-green-600 text-white px-6 py-3 rounded-lg shadow hover:bg-green-700 transition "
+            className="bg-green-600 text-white px-6 py-3 rounded-sm shadow hover:bg-green-700 transition "
           >
             Save Settings
           </button>

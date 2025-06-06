@@ -26,7 +26,6 @@ const NewImageElement = ({ index, onUpload, element }) => {
     />
   );
   const handleImageUpload = ({index, url,subType,position}) => {
-    console.log('2... handling general image upload')
     setImageUrl(url);
     onUpload({index, url,subType,position}); 
   };

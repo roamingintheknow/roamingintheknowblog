@@ -9,14 +9,12 @@ const EditBlog=() =>{
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     async function fetchBlog() {
       if (slug) {
         try {
           const response = await fetch(`/api/blogs/${slug}`);
           const data = await response.json();
-          console.log('loaded blog...',data)
           if (response.ok) {
             const parsedElements = data.blog.elements.map((el: { type: string; content: any }) => ({
               ...el,

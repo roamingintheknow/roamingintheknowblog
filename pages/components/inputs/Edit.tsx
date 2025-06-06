@@ -14,14 +14,14 @@ function PreviewToggle({isPreview,setIsPreview}){
      <div className="flex gap-2 centered-children bottom-padding-sm roaming-white">
     <button
       onClick={() => setIsPreview(false)}
-      className={`px-6 py-3 rounded-lg shadow-md transition-all duration-200 ${
+      className={`px-6 py-3 rounded-sm shadow-md transition-all duration-200 ${
         isPreview ? 'text-black roaming-black hover:roaming-green' : 'roaming-green text-white '
       }`}    >
       Edit
     </button>
     <button
       onClick={() => setIsPreview(true)}
-      className={`px-6 py-3 rounded-lg shadow-md transition-all duration-200 ${
+      className={`px-6 py-3 rounded-sm shadow-md transition-all duration-200 ${
         !isPreview ? 'text-black roaming-black hover:roaming-green' 
       : 'roaming-green text-white hover:roaming-green'
       }`}    >
@@ -31,6 +31,16 @@ function PreviewToggle({isPreview,setIsPreview}){
   </>
   )
 }
+const triggerRebuild = async (slug) => {
+  try {
+    const response = await fetch(`/api/revalidate?slug=${slug}`);
+    const data = await response.json();
+    if (data.revalidated) {
+    }
+  } catch (error) {
+    console.error('Error triggering revalidation:', error);
+  }
+};
 
 function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
   
@@ -76,7 +86,6 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
       }));
   
       setElements(parsedElements);
-      console.log('parsedelements...',parsedElements)
       setCurrentBlog((prevBlog) => ({
         ...prevBlog,
         ...blog,
@@ -99,6 +108,7 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
         { id: uuidv4(), type, content: "", imageUrls: [] },
       ]);
       
+      
     },
     [setElements]
   );
@@ -109,8 +119,12 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
       const reordered = Array.from(elements);
       const [removed] = reordered.splice(result.source.index, 1);
       reordered.splice(result.destination.index, 0, removed);
-      console.log('re ordered...',reordered)
       setElements(reordered);
+      setCurrentBlog((prevBlog) => ({
+        ...prevBlog,
+        ...blog,
+        elements: reordered,
+      }));
     },
     [elements]
   );
@@ -134,7 +148,6 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
   }, [elements]); // This effect will only run when elements change
   
   const handleContentChange = (index: number, value) => {
-    console.log('value recieved...',value)
     const newElements = [...elements];
     newElements[index].content = value;
     setElements(newElements);
@@ -152,31 +165,59 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
     }));      
   };
 
-
   const handleImageUpload = ({ index, url, subType, position }) => {
-    setElements((prevElements) => {
-      const newElements = [...prevElements];
+    const newElements = [...elements];
   
-      // Ensure the element exists and is of type 'image'
-      if (!newElements[index] || newElements[index].type !== 'image') {
-        return prevElements; // Return the original array if invalid
-      }
+    if (!newElements[index] || newElements[index].type !== 'image') return;
   
-      // Ensure `imageUrls` is an array
-      if (!Array.isArray(newElements[index].imageUrls)) {
-        newElements[index].imageUrls = [];
-      }
+    if (!Array.isArray(newElements[index].imageUrls)) {
+      newElements[index].imageUrls = [];
+    }
   
-      // Update the image URL at the specific position
-      newElements[index].imageUrls[position] = url;
+    newElements[index].imageUrls[position] = url;
+    newElements[index].subType = subType;
   
-      // Set the subtype if provided
-      newElements[index].subType = subType;
-
-      return newElements;
-    });
-
+    setElements(newElements);
+    setCurrentBlog((prevBlog) => ({
+      ...prevBlog,
+      elements: newElements,
+    }));
   };
+  
+  // const handleImageUpload = ({ index, url, subType, position }) => {
+    
+    
+    
+    
+  //   setElements((prevElements) => {
+  //     const newElements = [...prevElements];
+  
+  //     // Ensure the element exists and is of type 'image'
+  //     if (!newElements[index] || newElements[index].type !== 'image') {
+  //       return prevElements; // Return the original array if invalid
+  //     }
+  
+  //     // Ensure `imageUrls` is an array
+  //     if (!Array.isArray(newElements[index].imageUrls)) {
+  //       newElements[index].imageUrls = [];
+  //     }
+  
+  //     // Update the image URL at the specific position
+  //     newElements[index].imageUrls[position] = url;
+  
+  //     // Set the subtype if provided
+  //     newElements[index].subType = subType;
+  //     setCurrentBlog((prevBlog) => ({
+  //       ...prevBlog,
+  //       elements: newElements,
+  //     }));
+  //     return newElements;
+  //   });
+  //   setCurrentBlog((prevBlog) => ({
+  //     ...prevBlog,
+  //     elements: newElements,
+  //   }));
+  // };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -199,6 +240,11 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
   const handleRemoveElement = (index) => {
     const newElements = elements.filter((_, i) => i !== index);
     setElements(newElements);
+    setCurrentBlog((prevBlog) => ({
+      ...prevBlog,
+      ...blog,
+      elements: newElements,
+    }));
 
   };
   const handleListAdd = (list) => {
@@ -219,6 +265,7 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
       setErrors(newErrors);
     } else {
       saveBlog();
+      triggerRebuild(currentBlog.slug);
     }
   };
 
@@ -332,7 +379,7 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
           <button
             key={type}
             onClick={() => addElement(type)}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-200"
+            className="bg-blue-600 text-white px-6 py-3 rounded-sm shadow-md hover:bg-blue-700 transition-all duration-200"
           >
             + {type.replace("_", " ")}
           </button>
@@ -340,7 +387,7 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
       </div>
   
       {/* Blog Details Section */}
-      <div className="p-4 max-w-lg mx-auto bg-white rounded-lg shadow-md">
+      <div className="p-4 max-w-lg mx-auto bg-white rounded-sm shadow-md">
         {!hideTitle && (
           <>
             {[

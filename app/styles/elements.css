@@ -186,7 +186,7 @@
   display: flex;
   justify-content: space-between;
   padding: 2.5em;
-  background-color: #f8f8f8; /* Adjust as needed */
+  /* background-color: #f8f8f8; Adjust as needed */
   height: 150px; /* Adjust height as needed */
 }
 

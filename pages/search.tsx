@@ -170,7 +170,7 @@ export default function Search() {
             alt={`Blog Cover Img ${blog.title}`}
             fill 
             style={{ objectFit: 'cover' }}
-            className="rounded-lg"
+            className="rounded-sm"
           />
         <div className="absolute inset-0 flex items-center justify-center px-4 ">
           <p className="text-center img-caption roaming-yellow-text whitespace-normal leading-snug">

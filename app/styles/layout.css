@@ -130,6 +130,36 @@
 .top-padding-lg{
   padding-top:3em;
 }
+
+.right-padding-sm{
+  padding-right:1em;
+}
+
+.right-padding-md{
+  padding-right:2em;
+}
+
+.right-padding-lg{
+  padding-right:3em;
+}
+.left-padding-sm{
+  padding-left:1em;
+}
+
+.left-padding-md{
+  padding-left:2em;
+}
+
+.left-padding-lg{
+  padding-left:3em;
+}
+
+.left-padding-xxlg{
+  padding-left:8em;
+}
+.right-padding-xxlg{
+  padding-left:8em;
+}
 .input-padding-sm{
   padding-left:1em;
   padding-right:1em;

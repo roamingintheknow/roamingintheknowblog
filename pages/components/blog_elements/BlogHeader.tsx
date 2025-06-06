@@ -6,7 +6,7 @@ export function BlogHeader({text}: BlogHeaderProps) {
 
   return (
     <div>
-      <p className ='blog-h2 blog-element roaming-brown-text'>{text}</p>
+      <h1 className ='blog-h1 blog-element roaming-black-text'>{text}</h1>
     </div>
   );
 }

@@ -14,6 +14,7 @@ import '../app/styles/form.css';
 import '../app/styles/images.css';
 import '../app/styles/layout.css';
 
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>

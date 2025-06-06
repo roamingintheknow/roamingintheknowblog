@@ -19,9 +19,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
-  console.log("Headers:", req.headers);
-  console.log("Body:", req.body);
-  console.log("Auth header:", req.headers.authorization);
   try {
     // ✅ Ensure the user is an admin before proceeding
     const authHeader = req.headers.authorization;
@@ -55,7 +52,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!blog?.title || !blog?.slug) {
       return res.status(400).json({ error: "Blog must have a title and a slug" });
     }
-    console.log('saving this blog...',blog)
     // ✅ Upsert logic: Update if exists, otherwise insert
     const filter = { $or: [{ title: blog.title }, { slug: blog.slug }] };
     const { _id, createdAt, ...updateData } = blog; // Exclude _id from update
@@ -65,7 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const options = { upsert: true };
 
     const result = await collection.updateOne(filter, update, options);
-    console.log('result...',result)
+
     if (result.upsertedCount > 0) {
       return res.status(201).json({ message: "Blog created successfully!", result });
     } else {
