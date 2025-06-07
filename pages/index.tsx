@@ -1,6 +1,7 @@
 import HomePage from './components/views/HomePage';
 import { getRecentBlogs } from '@/lib/getRecentBlogs';
 import { getPopularBlogs } from '@/lib/getPopularBlogs';
+import { Blog } from '@/types/blog';
 
 export const getStaticProps = async () => {
   const recentBlogs = await getRecentBlogs(8);
@@ -18,6 +19,6 @@ export const getStaticProps = async () => {
   };
 };
 
-export default function Main({ recentBlogs, popularBlogs }) {
+export default function Main({recentBlogs, popularBlogs}: { recentBlogs: Blog[],popularBlogs: Blog[] }) {
   return <HomePage recentBlogs={recentBlogs} popularBlogs={popularBlogs}/>;
 }

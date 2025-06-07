@@ -1,3 +1,5 @@
+import { Blog, BlogElement } from '@/types/blog';
+
 interface SubSubItem {
   id: number;
   text: string;
@@ -15,17 +17,11 @@ interface ContentItem {
   subItems: SubItem[];
 };
 
-
-
-interface  Element {
-  content: string ;
-  imageUrls: string[];
-};
-
-export function BlogList({ element }: { element: Element }) {
+export function BlogList({ element }: { element: BlogElement }) {
+  const contentString = Array.isArray(element.content) ? element.content.join('') : element.content;
   const parsedContent: ContentItem[] = (() => {
     try {
-      return JSON.parse(element.content);
+      return JSON.parse(contentString);
     } catch (e) {
       console.error("Failed to parse content", e);
       return [];

@@ -1,0 +1,1 @@
+export const DEFAULT_COVER_IMAGE = "/placeholder.jpg"; // or a static import if in /public

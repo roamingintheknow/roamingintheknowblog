@@ -1,11 +1,26 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import ImagePreview from '../ImagePreview';
+import ImagePreview from '../../ImagePreview';
+import { ChangeEvent } from 'react';
 
-const ImageInput = ({type, onUpload, existingImg, position}) => {
-  const [image, setImage] = useState(null);
+type UploadType = 'coverH' | 'coverV' | 'coverS' | 'smallH' | 'smallV';
+
+interface ImageInputProps {
+  type: string;
+  onUpload: (args: {
+    imageUrl: string;
+    lowResUrl: string;
+    type: string;
+    position?: number;
+  }) => void;
+  existingImg?: string;
+  position?: number;
+}
+
+const ImageInput = ({ type, onUpload, existingImg, position }: ImageInputProps) => {
+  const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [imagePrev, setImagePrev] = useState(existingImg);
 
   // Update preview if existingImg changes
@@ -13,13 +28,26 @@ const ImageInput = ({type, onUpload, existingImg, position}) => {
     setImagePrev(existingImg);
   }, [existingImg]);
   
-  const onImageUpload = ({imageUrl,lowResUrl, type, position})=>{
-    setImagePrev(imageUrl)
-    onUpload({ imageUrl,lowResUrl, type, position });
-  }
+  const onImageUpload = ({
+    imageUrl,
+    lowResUrl,
+    type,
+    position,
+  }: {
+    imageUrl: string;
+    lowResUrl: string;
+    type: string;
+    position?: number;
+  }) => {
+    setImagePrev(imageUrl);
+    onUpload({ imageUrl, lowResUrl, type, position });
+  };
 
-  const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>)  => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImage(file);
+    }
   };
 
   const handleUpload = async () => {
@@ -29,7 +57,7 @@ const ImageInput = ({type, onUpload, existingImg, position}) => {
     setError(null);
   
     const cloudName = process.env.NEXT_PUBLIC_CLOUD_NAME;
-    const uploadPresets = {
+    const uploadPresets: Record<UploadType, string | undefined> = {
       coverH: process.env.NEXT_PUBLIC_HORIZONTAL_UPLOAD_PRESET,
       coverV: process.env.NEXT_PUBLIC_VERTICAL_UPLOAD_PRESET,
       coverS: process.env.NEXT_PUBLIC_SQUARE_UPLOAD_PRESET,
@@ -37,7 +65,8 @@ const ImageInput = ({type, onUpload, existingImg, position}) => {
       smallV: process.env.NEXT_PUBLIC_SMALL_VERTICAL_UPLOAD_PRESET,
     };
   
-    const uploadPreset = uploadPresets[type];
+    const uploadPreset = uploadPresets[type as UploadType];
+
     if (!uploadPreset) {
       setError(`Invalid upload type: ${type}. Please check your configuration.`);
       setLoading(false);

@@ -32,7 +32,7 @@ const ListBuilder = ({ index, onChange, existingList }: {
   
   useEffect(() => {
     // Sending the updated list back up to the main edit component so it is saved with the blog
-    onChange(index, list); // Call the function directly
+    onChange(index, JSON.stringify(list));
   }, [list]); 
 
   const addListItem = () => {

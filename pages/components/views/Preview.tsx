@@ -1,18 +1,10 @@
 import BlogPost from '../blog_elements/BlogPost';
 import {BlogNavPanel} from '../blog_elements/BlogNavPanel';
-import { BlogElement } from '@/types/blog';
-
-interface Blog {
-  _id: string;
-  coverH: string;
-  coverV: string;
-  coverS: string;
-  elements: BlogElement[];
-}
+import { Blog } from '@/types/blog';
 
 interface PreviewProps {
   blog: Blog;
-  setPreview: (preview: boolean) => void;
+  setPreview?: (preview: boolean) => void;
 }
 
 export default function Preview({ blog, setPreview }: PreviewProps) {
@@ -29,10 +21,11 @@ export default function Preview({ blog, setPreview }: PreviewProps) {
 )}
 
       <BlogNavPanel elements={blog?.elements} />
-      <BlogPost elements={blog?.elements} 
+      <BlogPost blog={blog} />
+      {/* <BlogPost elements={blog?.elements} 
                 coverH={blog?.coverH} 
                 coverV={blog?.coverV} 
-                coverS={blog?.coverS} />
+                coverS={blog?.coverS} /> */}
       
     </>
   );

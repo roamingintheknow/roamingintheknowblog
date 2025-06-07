@@ -2,7 +2,7 @@ import { connectToDatabase } from '@/lib/mongodb';
 
 export async function getPopularBlogs(limit = 7) {
   const { db } = await connectToDatabase();
-  const blogs = await db
+  const blogs = await db 
     .collection('blogs')
     .find({})
     .sort({ edited_at: -1 })

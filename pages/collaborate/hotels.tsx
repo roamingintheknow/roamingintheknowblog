@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image'
-import { signIn, useSession } from 'next-auth/react';
 import BlogPost from '../components/blog_elements/BlogPost'
-import { Blog, BlogElement } from '@/types/blog';
+import { Blog } from '@/types/blog';
 
 export default function Hotels(){
   const [loading, setLoading] = useState(true);
@@ -36,7 +34,7 @@ export default function Hotels(){
   
   return(
     <>
-<BlogPost elements={hotelElements||[]} hideTitle={true}/>
+ {!loading && hotelBlog && <BlogPost blog={hotelBlog} />}
 </>
   )
 }

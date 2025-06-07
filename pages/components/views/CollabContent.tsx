@@ -5,11 +5,9 @@ import BlogPost from '../blog_elements/BlogPost'
 import { useRouter } from 'next/router';
 
 export  function CollabContent(){
-  const [settings, setSiteSettings] = useState({});
-  const collabImages = [
-    settings?.collabPhoto1? settings?.collabPhoto1: 'https://res.cloudinary.com/dqiq7slio/image/upload/v1727065148/travel_blog_images/xzccreteken3eznpfzrp.webp',
-    settings?.collabPhoto2? settings?.collabPhoto2:'https://res.cloudinary.com/dqiq7slio/image/upload/v1727065148/travel_blog_images/xzccreteken3eznpfzrp.webp',
-    settings?.collabPhoto3? settings?.collabPhoto3:'https://res.cloudinary.com/dqiq7slio/image/upload/v1727065148/travel_blog_images/xzccreteken3eznpfzrp.webp'
+  const collabImages = ['https://res.cloudinary.com/dqiq7slio/image/upload/v1727065148/travel_blog_images/xzccreteken3eznpfzrp.webp',
+    'https://res.cloudinary.com/dqiq7slio/image/upload/v1727065148/travel_blog_images/xzccreteken3eznpfzrp.webp',
+    'https://res.cloudinary.com/dqiq7slio/image/upload/v1727065148/travel_blog_images/xzccreteken3eznpfzrp.webp'
   ];
 
 

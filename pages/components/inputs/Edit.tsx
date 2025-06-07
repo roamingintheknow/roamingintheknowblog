@@ -1,13 +1,27 @@
 import { useEffect, useState, useCallback } from 'react';
 import { NewBlogInput } from './NewBlogInput';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import ImageInput from './ImageInput';
-import ImagePreview from '../ImagePreview';
+import ImageInput from './ImageInputs/ImageInput';
 import { v4 as uuidv4 } from 'uuid'; 
 import { useIsAdmin } from "@/lib/auth";
+import { Blog, ElementType} from "@/types/blog";
+import { ImageUploadParams } from "@/types/images";
 import Preview from '../views/Preview';
+import type { DropResult } from 'react-beautiful-dnd';
+import { ChangeEvent } from 'react';
 
-function PreviewToggle({isPreview,setIsPreview}){
+interface EditProps {
+  blog?: Blog | null;
+  setPreview: (preview: boolean) => void;
+  hideTitle?: boolean;
+  forcedSlug?: string;
+}
+interface PreviewToggleProps {
+  isPreview: boolean;
+  setIsPreview: (preview: boolean) => void;
+}
+
+function PreviewToggle({ isPreview, setIsPreview }: PreviewToggleProps) {
 
   return(
     <>
@@ -31,7 +45,8 @@ function PreviewToggle({isPreview,setIsPreview}){
   </>
   )
 }
-const triggerRebuild = async (slug) => {
+
+const triggerRebuild = async (slug: string) => {
   try {
     const response = await fetch(`/api/revalidate?slug=${slug}`);
     const data = await response.json();
@@ -42,10 +57,9 @@ const triggerRebuild = async (slug) => {
   }
 };
 
-function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
-  
-  const { isAdmin, session, loadingAdminStatus } = useIsAdmin();
-  console.log('session...',session)
+function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }: EditProps) {
+  if (!blog) return;
+  const { isAdmin, session} = useIsAdmin();
 
   const defaultElements = hideTitle 
   ? [] 
@@ -60,8 +74,11 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
     ];
 
   const [elements, setElements] = useState(defaultElements);
-  const [errors, setErrors] = useState(null);
-  const [currentBlog, setCurrentBlog] = useState({
+  const [errors, setErrors] = useState<string[]>([]);
+  const [currentBlog, setCurrentBlog] = useState<Blog>({
+    _id: '',
+    hideTitle: false,        
+    text: '',  
     elements: defaultElements,
     title: forcedSlug ||'',
     slug: forcedSlug ||'',
@@ -94,27 +111,18 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
     }
   }, [blog]);
   
-
-  // const addElement = (type) => {
-  //   setElements((prevElements) => [
-  //     ...prevElements,
-  //     { type: type, content: '', imageUrls: [] }
-  //   ]);
-  // };
   const addElement = useCallback(
-    (type) => {
+    (type: ElementType) => {
       setElements((prev) => [
         ...prev,
         { id: uuidv4(), type, content: "", imageUrls: [] },
       ]);
-      
-      
     },
     [setElements]
   );
 
   const onDragEnd = useCallback(
-    (result) => {
+    (result: DropResult) => {
       if (!result.destination) return;
       const reordered = Array.from(elements);
       const [removed] = reordered.splice(result.source.index, 1);
@@ -146,26 +154,25 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
       }));
     }
   }, [elements]); // This effect will only run when elements change
-  
-  const handleContentChange = (index: number, value) => {
+  function ensureString(value: string | string[] | undefined): string {
+    if (!value) return '';
+    return Array.isArray(value) ? value[0] : value;
+  }
+  const handleContentChange = (index: number, value: string) => {
     const newElements = [...elements];
     newElements[index].content = value;
     setElements(newElements);
-    
-    setCurrentBlog((prevBlog) => ({
+    setCurrentBlog((prevBlog: Blog) => ({
       ...prevBlog,
+      ...blog, 
+      title: ensureString(blog.title),
+      slug: ensureString(blog.slug),
       elements: newElements,
-      ...(newElements[index].type === 'title' && {
-        title: newElements[index].content,
-        slug: newElements[index].content
-          .toLowerCase()
-          .replace(/[^a-z0-9\s]/g, '')
-          .replace(/\s+/g, '_'),
-      }),
-    }));      
+    }));
+    
   };
 
-  const handleImageUpload = ({ index, url, subType, position }) => {
+  const handleImageUpload = ({ index, url, subType, position }: ImageUploadParams) => {
     const newElements = [...elements];
   
     if (!newElements[index] || newElements[index].type !== 'image') return;
@@ -174,7 +181,11 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
       newElements[index].imageUrls = [];
     }
   
-    newElements[index].imageUrls[position] = url;
+    const safePosition = Number(position ?? 0);
+    if (!isNaN(safePosition)) {
+      newElements[index].imageUrls[safePosition] =
+        typeof url === 'string' ? { imageUrl: url } : url;
+    }
     newElements[index].subType = subType;
   
     setElements(newElements);
@@ -184,51 +195,14 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
     }));
   };
   
-  // const handleImageUpload = ({ index, url, subType, position }) => {
-    
-    
-    
-    
-  //   setElements((prevElements) => {
-  //     const newElements = [...prevElements];
-  
-  //     // Ensure the element exists and is of type 'image'
-  //     if (!newElements[index] || newElements[index].type !== 'image') {
-  //       return prevElements; // Return the original array if invalid
-  //     }
-  
-  //     // Ensure `imageUrls` is an array
-  //     if (!Array.isArray(newElements[index].imageUrls)) {
-  //       newElements[index].imageUrls = [];
-  //     }
-  
-  //     // Update the image URL at the specific position
-  //     newElements[index].imageUrls[position] = url;
-  
-  //     // Set the subtype if provided
-  //     newElements[index].subType = subType;
-  //     setCurrentBlog((prevBlog) => ({
-  //       ...prevBlog,
-  //       elements: newElements,
-  //     }));
-  //     return newElements;
-  //   });
-  //   setCurrentBlog((prevBlog) => ({
-  //     ...prevBlog,
-  //     elements: newElements,
-  //   }));
-  // };
-
-  const handleInputChange = (e) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  )=> {
     const { name, value } = e.target;
     setCurrentBlog((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleCheckboxChange = (e) => {
-    setCurrentBlog((prev) => ({ ...prev, [e.target.name]: e.target.checked }));
-  };
-
-  const handleTagsChange = (e) => {
+  const handleTagsChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setCurrentBlog((prev) => ({ ...prev, tags: value.split(',').map(tag => tag.trim()) }));
   };
@@ -237,7 +211,7 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
     setCurrentBlog((prev) => ({ ...prev, [type]: imageUrl }));
   };
 
-  const handleRemoveElement = (index) => {
+  const handleRemoveElement = (index: number) => {
     const newElements = elements.filter((_, i) => i !== index);
     setElements(newElements);
     setCurrentBlog((prevBlog) => ({
@@ -245,11 +219,7 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
       ...blog,
       elements: newElements,
     }));
-
   };
-  const handleListAdd = (list) => {
-
-  }
   const prepareBlogSave = () => {
     const newErrors = [];
     if (currentBlog.title === ''&& !hideTitle) newErrors.push('Title is required.');
@@ -287,6 +257,9 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
   };
 
     try {
+      if (!session) {
+        return;
+      }
       const response = await fetch('/api/saveBlog', {
         method: 'POST',
         headers: {
@@ -350,7 +323,6 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
                             element={element}
                             index={index}
                             onChange={handleContentChange}
-                            handleListAdd={handleListAdd}
                             onImageUpload={handleImageUpload}
                           />
                           {element.type !== "title" && (
@@ -375,7 +347,7 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
   
       {/* Add Elements Section */}
       <div className="p-4 flex flex-wrap gap-4 justify-center">
-        {["header", "sub_header", "body", "list", "image"].map((type) => (
+        {(["header", "sub_header", "body", "list", "image"] as ElementType[]).map((type) => (
           <button
             key={type}
             onClick={() => addElement(type)}
@@ -453,8 +425,8 @@ function Edit({ blog = null, setPreview, hideTitle = false, forcedSlug }) {
                 <ImageInput
                   type={`cover${type[0]}`}
                   onUpload={handleCoverPhotoUpload}
-                  className="w-full"
-                  existingImg={currentBlog[`cover${type[0]}`]}
+                  existingImg={currentBlog[`cover${type[0]}` as keyof Blog] as string | undefined}
+                  // existingImg={currentBlog[`cover${type[0]}`]}
                 />
               </div>
             ))}

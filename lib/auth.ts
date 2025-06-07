@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import { getSession } from "next-auth/react";
+import { Session } from "next-auth";
+import NextAuth from "next-auth";
 
+declare module "next-auth" {
+  interface Session {
+    accessToken?: string;
+  }
+}
 export function useIsAdmin() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);

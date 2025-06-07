@@ -1,14 +1,14 @@
 import StickyHeader from '../nav/StickyHeader'
 import Image from 'next/image'
+import { DEFAULT_COVER_IMAGE } from "@/variables/images";
 
-interface BlogTitleProps {
-  coverH: string;
-  coverV: string;
-  coverS: string;
+interface TitleProps {
   text: string | string[];
+  coverH?: string;
+  coverV?: string;
+  coverS?: string;
 }
-
-export function BlogTitle({ text, coverH,coverV,coverS }: BlogTitleProps) {
+export function BlogTitle({ text, coverH,coverV,coverS }: TitleProps) {
   return (
 <>
 <StickyHeader page="none"/>
@@ -17,7 +17,7 @@ export function BlogTitle({ text, coverH,coverV,coverS }: BlogTitleProps) {
   {/* Image Block with Overlay */}
   <div className="absolute inset-0">
     <Image
-      src={coverH}
+      src={coverH ?? DEFAULT_COVER_IMAGE}
       alt={'cover image'}
       fill 
       style={{ objectFit: 'cover' }}

@@ -4,17 +4,13 @@ import { BlogSubHeader } from './BlogSubHeader';
 import { BlogBody } from './BlogBody';
 import { BlogImage } from './BlogImage';
 import { BlogList } from './BlogList';
-import { BlogElement } from '@/types/blog';
+import { Blog, BlogElement } from '@/types/blog';
 
 interface BlogPostProps {
-  elements: BlogElement[];
-  hideTitle?: boolean;
-  coverH: string;
-  coverV: string;
-  coverS: string;
+  blog: Blog;
 }
 
-export default function BlogPost({ elements,coverH,coverV,coverS, hideTitle = false }: BlogPostProps) {
+export default function BlogPost({ blog }: BlogPostProps) {
   return (
     <div
       className="full-width bg-white blog-container flex flex-col space-y-4 items-start"
@@ -27,12 +23,12 @@ export default function BlogPost({ elements,coverH,coverV,coverS, hideTitle = fa
         minHeight: '100vh',
       }}
     >
-      {elements.map((element, index) => (
+      {blog.elements.map((element: BlogElement, index: number) => (
         <div key={index} className="w-full">
-          {element.type === 'title' && !hideTitle && <BlogTitle text={element.content} 
-                                                                coverH={coverH}
-                                                                coverV={coverV}
-                                                                coverS={coverS} />}
+          {element.type === 'title' && !blog.hideTitle && <BlogTitle text={element.content} 
+                                                                coverH={blog.coverH}
+                                                                coverV={blog.coverV}
+                                                                coverS={blog.coverS} />}
           {element.type === 'header' && (
   <div id={`header-${index}`}>
     <BlogHeader text={element.content} />

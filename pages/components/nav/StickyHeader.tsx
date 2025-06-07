@@ -217,11 +217,13 @@ export default function StickyHeader({ page }: StickyHeaderProps) {
 
 const NestedDropdown = ({ menuItems }: NestedDropdownProps) => {
   const [open, setOpen] = useState(false);
-  const [submenuOpen, setSubmenuOpen] = useState(null);
+  const [submenuOpen, setSubmenuOpen] = useState<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleMenuToggle = () => setOpen(!open);
-  const handleSubmenuToggle = (index) => setSubmenuOpen(submenuOpen === index ? null : index);
+  const handleSubmenuToggle = (index: number): void => {
+    setSubmenuOpen(submenuOpen === index ? null : index);
+  };
   
   const handleClickOutside = (event: MouseEvent) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {

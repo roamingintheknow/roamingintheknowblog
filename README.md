@@ -34,3 +34,12 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+Image Uploads
+
+Starts on ImageInput.tsx
+
+ImageInput takes in the file. Has onUpload as a prop sent down from one of the ImageUploaders.
+
+The imageUploaders handle the preview and then also callbackand onUpload function from NewImageElement which just then calls the upload function from NewBlogInput which is just the blog saving function sent from Edit.

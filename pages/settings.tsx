@@ -2,7 +2,7 @@ import { signIn} from 'next-auth/react';
 import { useIsAdmin } from "@/lib/auth";
 import { useState, useEffect} from 'react';
 import ImagePreview from './components/ImagePreview';
-import ImageInput from './components/inputs/ImageInput';
+import ImageInput from './components/inputs/ImageInputs/ImageInput';
 
 export default function Settings() {
   const { isAdmin, session, loadingAdminStatus } = useIsAdmin();

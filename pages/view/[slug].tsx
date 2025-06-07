@@ -2,6 +2,8 @@
 // import Preview from '../components/views/Preview';
 import dynamic from 'next/dynamic';
 import { fetchAllPublishedPostsFromMongo, fetchPostBySlug } from '@/lib/blogs';
+import { Blog } from '@/types/blog';
+import { GetStaticProps, GetStaticPropsContext } from 'next';
 
 const Preview = dynamic(() => import('../components/views/Preview'), { ssr: false });
 
@@ -15,8 +17,9 @@ export async function getStaticPaths() {
     fallback: 'blocking',
   };
 }
-export async function getStaticProps(context) {
-  const blog = await fetchPostBySlug(context.params.slug);
+export const getStaticProps: GetStaticProps = async (context: GetStaticPropsContext) => {
+  const slug = Array.isArray(context?.params?.slug) ? context.params.slug[0] : context?.params?.slug ?? "";
+  const blog = await fetchPostBySlug(slug);
   if (!blog) {
     return { notFound: true };
   }
@@ -25,31 +28,10 @@ export async function getStaticProps(context) {
     props: {
       blog: cleanBlog
     }
-    // props: {
-    //   blog: {
-    //     ...blog,
-    //     _id: blog._id.toString(), // stringify ObjectId
-    //     createdAt: blog.createdAt.toISOString(),
-    //     updatedAt: blog.updatedAt.toISOString(),
-    //   }
-    // }
   };
 }
 
-// export async function getStaticProps({ params }) {
-//   const post = await fetchPostBySlug(params.slug);
-//   console.log('post found...',post)
-//   if (!post) {
-//     return { notFound: true };
-//   }
-
-//   return {
-//     props: { blog: post },
-//     revalidate: 60, // or use revalidate API route as discussed
-//   };
-// }
-
-const ViewBlog = ({ blog }) => {
+const ViewBlog = ({ blog }: { blog: Blog }) => {
   if (!blog) return <p>Blog not found.</p>;
   return (
     <div>
